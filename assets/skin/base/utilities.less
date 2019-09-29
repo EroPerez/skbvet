@@ -1,0 +1,270 @@
+/*==================================================
+  Utility Classes
+==================================================== */
+
+
+// Floats
+// -------------------------
+
+.clearfix {
+  .clearfix();
+}
+
+.center-block {
+  .center-block();
+}
+
+.center-children > div {
+  float: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+.pull-left {
+  float: left !important;
+}
+
+@media (min-width: 480px) {
+  .pull-xs-left {
+    float: left;
+  }
+  img.pull-xs-left {
+    padding-right: 29px;
+  }
+  .pull-xs-base {
+    float: none;
+  }
+  .pull-xs-right {
+    float: right;
+  }
+  img.pull-xs-right {
+    padding-left: 29px;
+  }
+}
+
+@media (min-width: 768px) {
+  .pull-sm-left {
+    float: left;
+  }
+  img.pull-sm-left {
+    padding-right: 29px;
+  }
+  .pull-sm-base {
+    float: none;
+  }
+  .pull-sm-right {
+    float: right;
+  }
+  img.pull-sm-right {
+    padding-left: 29px;
+  }
+}
+
+@media (min-width: 992px) {
+  .pull-md-left {
+    float: left;
+  }
+  img.pull-md-left {
+    padding-right: 29px;
+  }
+  .pull-md-base {
+    float: none;
+  }
+  .pull-md-right {
+    float: right;
+  }
+  img.pull-md-right {
+    padding-left: 29px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pull-lg-left {
+    float: left;
+  }
+  img.pull-lg-left {
+    padding-right: 29px;
+  }
+  .pull-lg-base {
+    float: none;
+  }
+  .pull-lg-right {
+    float: right;
+  }
+  img.pull-lg-right {
+    padding-left: 29px;
+  }
+}
+
+
+// Toggling content
+// -------------------------
+
+// Note: Deprecated .hide in favor of .hidden or .sr-only (as appropriate) in v3.0.1
+.hide {
+  display: none !important;
+}
+.show {
+  display: block !important;
+}
+.invisible {
+  visibility: hidden;
+}
+.text-hide {
+  .text-hide();
+}
+
+
+// Hide from screenreaders and browsers
+//
+// Credit: HTML5 Boilerplate
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+
+// For Affix plugin
+// -------------------------
+
+.affix {
+  position: fixed;
+  .translate3d(0, 0, 0);
+}
+
+// The analogue to hide / show but done based on the mobile first methodology
+
+.veil {
+  display: none !important;
+}
+
+.reveal-block {
+  display: block !important;
+}
+
+.reveal-flex {
+  display: -ms-flexbox !important;
+  display: -webkit-flex !important;
+  display: flex !important;
+}
+
+.reveal-inline-block {
+  display: inline-block !important;
+}
+
+.reveal-inline {
+  display: inline !important;
+}
+
+.reveal-table-cell {
+  display: table-cell !important;
+}
+
+@media (min-width: 480px) {
+  .reveal-xs-block {
+    display: block !important;
+  }
+  .reveal-xs-flex {
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+  }
+  .reveal-xs-inline-block {
+    display: inline-block !important;
+  }
+  .reveal-xs-inline {
+    display: inline !important;
+  }
+  .veil-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .reveal-sm-block {
+    display: block !important;
+  }
+  .reveal-sm-flex {
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+  }
+  .reveal-sm-inline-block {
+    display: inline-block !important;
+  }
+  .reveal-sm-inline {
+    display: inline !important;
+  }
+  .veil-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .reveal-md-block {
+    display: block !important;
+  }
+  .reveal-md-flex {
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+  }
+  .reveal-md-inline-block {
+    display: inline-block !important;
+  }
+  .reveal-md-inline {
+    display: inline !important;
+  }
+  .veil-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .reveal-lg-block {
+    display: block !important;
+  }
+  .reveal-lg-flex {
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+  }
+  .reveal-lg-inline-block {
+    display: inline-block !important;
+  }
+  .reveal-lg-inline {
+    display: inline !important;
+  }
+  .veil-lg {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1800px) {
+  .reveal-xlg-block {
+    display: block !important;
+  }
+  .reveal-xlg-flex {
+    display: -ms-flexbox !important;
+    display: -webkit-flex !important;
+    display: flex !important;
+  }
+  .reveal-xlg-inline-block {
+    display: inline-block !important;
+  }
+  .reveal-xlg-inline {
+    display: inline !important;
+  }
+  .reveal-xlg-table-cell {
+    display: table-cell !important;
+  }
+  .veil-xlg {
+    display: none !important;
+  }
+}

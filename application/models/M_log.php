@@ -1,0 +1,116 @@
+<?php
+class M_log extends CI_Model 
+{
+		
+///////////////////////////////////////////////////////////////////////////////////// 
+//Tabla M_log Atributos //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+var $idlog = ''; 
+var $user_username = ''; 
+var $date_ini = ''; 
+var $date_end = ''; 
+var $actions = ''; 
+			
+/////////////////////////////////////////////////////////////////////////////////////     
+// Métodos de la clase M_log .
+/////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+//Construtor de la clase.
+
+public function __construct()
+	{
+	 parent::__construct();
+	 $this->load->database(); 
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+/// Esta función inserta un elemento en la tabla.
+
+public function set_log($data)
+    {     
+        $this->idlog = $data['d_idlog']; 
+        $this->user_username = $data['d_user_username']; 
+        $this->date_ini = date("Y-m-d H:i:s"); 
+        $this->date_end = $data['d_date_end'];  
+        $this->actions = $data['d_actions'];  
+
+        $resultado = $this->db->insert('log',$this); 
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////// 
+// Esta función actualiza un elemento en la tabla.
+    
+function update_log($data)
+    { 
+		$this->db->set('user_username', $data['d_user_username']);
+        $this->db->set('date_ini', $data['d_date_ini']);
+        $this->db->set('date_end', $data['d_date_end']);
+        $this->db->set('actions', $data['d_actions']);
+	    
+        $this->db->where('idlog', $data['d_idlog']);
+        
+        $this->db->update('log');
+    }
+    
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función elimina un elemento en la tabla.
+
+public function del_log($idlog)
+    {
+     $this->db->delete('log', array('idlog' => $idlog));
+    }
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función busca elementos en la tabla por nombre
+
+public function find_log($data)
+    {
+     $this->db->select('*');
+     $this->db->from('log');
+     $this->db->like('user_username', $data['d_user_username']);  
+     $this->db->like('date_ini', $data['d_date_ini']); 
+     $this->db->like('date_end', $data['d_date_end']);     
+	 $query = $this->db->get();    
+     return $query->result_array();     
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de un elemento solicitado.
+
+public function get_one_log($idlog)
+	{
+		$query = $this->db->get_where('log', array('idlog' => $idlog));
+		return $query->result_array();     
+	}                                     
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de todos los elementos.
+
+public function get_all_log()
+	{
+		$query = $this->db->get('log');
+		return $query->result_array();     
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los log por username.
+public function get_log_by_user($user_username){
+       $this->db->select('*');
+       $this->db->from('log');
+       $this->db->where('user_username', $user_username);
+       $query = $this->db->get();
+        return $query->result_array();  
+}    
+
+}   
+
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

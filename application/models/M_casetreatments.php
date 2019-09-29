@@ -1,0 +1,114 @@
+<?php
+class M_casetreatments extends CI_Model 
+{
+		
+///////////////////////////////////////////////////////////////////////////////////// 
+//Tabla tblCaseTreatments Atributos //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+		var $recn = '';
+		var $caseRecn = ''; //llave externa  
+		var $treatmentRecn = ''; //llave externa
+		var $dateOfTreatment = ''; 
+		var $responseToTreatment = ''; 
+		var $CaseIllnessRecn = ''; //llave externa
+			
+/////////////////////////////////////////////////////////////////////////////////////     
+// Métodos de la clase CaseTreatments.
+/////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+//Construtor de la clase.
+
+public function __construct()
+	{
+	 parent::__construct();
+	 $this->load->database(); 
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+/// Esta función inserta un elemento en la tabla.
+
+public function set_casetreatments($data)
+    {     
+        //$this->recn = $data['d_recn'];   
+        $this->caseRecn = $data['d_caseRecn'];   
+        $this->treatmentRecn = $data['d_treatmentRecn'];
+        $this->dateOfTreatment = $data['d_dateOfTreatment'];  
+        $this->responseToTreatment = $data['d_responseToTreatment'];
+        $this->CaseIllnessRecn = $data['d_CaseIllnessRecn']; 
+        
+        $resultado = $this->db->insert('tblcasetreatments',$this); 
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////// 
+// Esta función actualiza un elemento en la tabla.
+    
+function update_casetreatments($data)
+    { 
+        $this->recn = $data['d_recn'];   
+        $this->caseRecn = $data['d_caseRecn'];   
+        $this->treatmentRecn = $data['d_treatmentRecn'];
+        $this->dateOfTreatment = $data['d_dateOfTreatment'];  
+        $this->responseToTreatment = $data['d_responseToTreatment'];
+        $this->CaseIllnessRecn = $data['d_CaseIllnessRecn']; 
+        
+        $this->db->where('recn', $data['d_recn']);
+        $this->db->update('tblcasetreatments',$this); 
+    }
+    
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función elimina un elemento en la tabla.
+
+public function del_casetreatments($id)
+    {
+     $this->db->delete('tblcasetreatments', array('recn' => $id));
+    }
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función busca elementos en la tabla que cumplen con un criterio.
+
+public function find_casetreatments($data)
+    {
+     $this->db->select('tblcasetreatments.*');
+     $this->db->from('tblcasetreatments');
+     $this->db->like('caseRecn', $data['d_caseRecn']);
+     $this->db->like('dateOfTreatment', $data['d_dateOfTreatment']);
+	 $this->db->like('responseToTreatment', $data['d_responseToTreatment']);
+        
+     $query = $this->db->get();    
+     return $query->result_array();     
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de la tabla.
+
+public function get_casetreatments()
+	{
+		$query = $this->db->get('tblcasetreatments');
+		return $query->result_array();     
+	}
+///////////////////////////////////////////////////////////////////////////////////// 
+
+	/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de un artículo solicitado.
+
+public function get_a_casetreatments($id)
+	{
+		$query = $this->db->get_where('tblcasetreatments', array('recn' => $id));
+		return $query->result_array();     
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+}  //llave de la clase 
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

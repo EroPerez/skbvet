@@ -1,0 +1,306 @@
+/*==================================================
+  Buttons
+==================================================== */
+
+
+// Base styles
+// --------------------------------------------------
+.btn {
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 0 solid transparent;
+  transition: .3s ease-in;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  .button-size(10px;
+      18px;
+      12px;
+      20px;
+      2px);
+  .user-select(none);
+  &, &:active, &.active {
+    &:focus {
+      .tab-focus();
+    }
+  }
+  &:hover,
+  &:focus {
+    color: @btn-default-color;
+    text-decoration: none;
+  }
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: not-allowed;
+    pointer-events: none; // Future-proof disabling of clicks
+    .opacity(.65);
+    .box-shadow(none);
+  }
+  &.btn-gradient {
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 0, 0, 0.07) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3) 1%, rgba(255, 255, 255, 0.15) 100%);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 1%, rgba(255, 255, 255, 0.15) 100%);
+    //  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#80ffffff', endColorstr='#00ffffff', GradientType=0);
+  }
+  &.btn-rounded {
+    border-radius: 20px;
+  }
+
+}
+
+// Link buttons
+// -------------------------
+// Make a button look and behave like a link
+.btn-link {
+  color: @link-color;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+  &, &:active, &[disabled], fieldset[disabled] & {
+    background-color: transparent;
+    .box-shadow(none);
+  }
+  &,
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: transparent;
+  }
+  &:hover,
+  &:focus {
+    color: @link-hover-color;
+    text-decoration: underline;
+    background-color: transparent;
+  }
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover, &:focus {
+      color: @btn-link-disabled-color;
+      text-decoration: none;
+    }
+  }
+}
+// Button Sizes
+// --------------------------------------------------
+.btn-lg {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  .button-size(13px;
+      23px;
+      12px;
+      20px;
+      2px);
+}
+.btn-sm {
+  .button-size(7px;
+      14px;
+      12px;
+      20px;
+      2px);
+}
+.btn-xs {
+  .button-size(3px;
+      8px;
+      12px;
+      20px;
+      2px);
+}
+
+.btn-circle{
+  .button-size(0;
+   0;
+   14px;
+   34px;
+    50%);
+
+  width: 34px;
+  height: 34px;
+}
+
+
+// Block button
+// --------------------------------------------------
+.btn-block {
+  display: block;
+  width: 100%;
+}
+// Vertically space out multiple block buttons
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+
+// Alt Btns - white buttons with thick left border
+// --------------------------------------------------
+// default alt btns
+.btn.btn-alt {
+  position: relative;
+  padding: 7px 11px;
+  margin: 5px 3px;
+  color: #999;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  background-color: #fbfbfb;
+  border-radius: 1px;
+  border: 1px solid #EEE;
+  border-left: 4px solid #EEE;
+  -webkit-transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease;
+}
+.btn.btn-alt.item-active,
+.btn.btn-alt:hover,
+.btn.btn-alt:focus {
+  color: #666 !important;
+  background-color: #fefefe !important;
+}
+// alt btns with gradient (set via .btn-gradient)
+.btn.btn-alt.btn-gradient {
+  background-color: #f0f0f0;
+  text-shadow: 0 -1px 0 rgba(255, 255, 255, 0.4);
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9) 10%, rgba(255, 255, 255, 0.3) 100%);
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 10%, rgba(255, 255, 255, 0.3) 100%);
+  //filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#80ffffff', endColorstr='#00ffffff', GradientType=0);
+  border-color: rgba(0, 0, 0, 0.07) rgba(0, 0, 0, 0.08) rgba(0, 0, 0, 0.14);
+  border-left: 4px solid #DDD;
+}
+.btn.btn-alt.btn-gradient:hover,
+.btn.btn-alt.btn-gradient:focus {
+  background-color: #eee;
+}
+
+.btn.btn-alt.item-checked {
+  opacity: 1;
+  color: #666;
+  border-left-color: @brand-success !important;
+  transition: all 0.2s ease;
+}
+
+
+// Holder Style - applies a placeholder like style to the element
+// --------------------------------------------------
+.holder-style {
+  display: block;
+  padding: 9px 16px;
+  color: #AAA;
+  background-color: #f1f1f1;
+  outline: 2px dashed #d9d9d9;
+  border: 0;
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  transition: all 0.15s ease;
+  min-width: 125px;
+}
+// holder states
+.holder-style:hover,
+.holder-style:focus {
+  cursor: pointer;
+  color: #777;
+  background-color: #EEE;
+  outline: 2px dashed #aaa;
+  border: 0;
+  text-decoration: none;
+}
+// active holder item
+.holder-style.holder-active {
+  background-color: #FFF;
+  outline-color: @brand-primary;
+}
+// holder icon
+.holder-style .holder-icon {
+  color: #AAA;
+  font-size: 30px;
+  padding-bottom: 10px;
+}
+// holder icon states and active
+.holder-style:hover .holder-icon,
+.holder-style:focus .holder-icon,
+.holder-style.holder-active .holder-icon {
+  color: @brand-primary;
+}
+
+.btn.btn-block{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+// Button Hover Effects
+// ------------------------------------------------
+
+// '.btn-dimmer' - Dims all child btn except active & :hover btns
+.btn-dimmer.btn,
+.btn-dimmer .btn {
+  opacity: 0.5;
+}
+.btn-dimmer.btn:hover,
+.btn-dimmer .btn:hover,
+.btn-dimmer.btn.item-active,
+.btn-dimmer .btn.item-active {
+  opacity: 1;
+}
+
+
+// / Button styles
+// ------------------------------------------------
+
+.btn.btn-green-grad{
+  color: #212121;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(80deg, rgba(253,241,117,1) 0%, rgba(178,255,89,1) 100%);
+  box-shadow: 0 11px 27px 0 #f3f372;
+  &:hover{
+    box-shadow: 0 0 2px 0 #f3f372;
+  }
+}
+
+.btn-white{
+  color: #424242;
+  border: 1px solid white;
+  letter-spacing: 0.1em;
+  font-size: 14px;
+
+  &:focus,
+  &:active,
+  &:hover{
+    color: #212121;
+  }
+
+  &:hover{
+    background-color: white;
+  }
+
+  &.btn-sm{
+    padding: 7px 20px;
+  }
+
+  &.active{
+    background-color: #fff;
+  }
+}

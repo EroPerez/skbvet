@@ -1,0 +1,120 @@
+<?php
+class M_documents extends CI_Model 
+{
+		
+///////////////////////////////////////////////////////////////////////////////////// 
+//Tabla tblDocuments Atributos //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+		var $recn = '';
+		var $Document = '';   
+		var $Scanned = ''; 
+		var $AnimalRecn = ''; //llave externa
+		var $DateAdded = ''; 
+		var $ScanLocation = ''; 
+		var $User = '';
+		var $DateEntered = ''; 
+			
+/////////////////////////////////////////////////////////////////////////////////////     
+// Métodos de la clase Documents.
+/////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+//Construtor de la clase.
+
+public function __construct()
+	{
+	 parent::__construct();
+	 $this->load->database(); 
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+/// Esta función inserta un elemento en la tabla.
+
+public function set_documents($data)
+    {     
+        //$this->recn = $data['d_recn'];   
+        $this->Document = $data['d_Document'];   
+        $this->Scanned = $data['d_Scanned'];
+        $this->AnimalRecn = $data['d_AnimalRecn'];  
+        $this->DateAdded = $data['d_DateAdded'];
+        $this->ScanLocation = $data['d_ScanLocation']; 
+		$this->User = $data['d_User'];
+        $this->DateEntered = $data['d_DateEntered']; 
+        
+        $resultado = $this->db->insert('documents',$this); 
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////// 
+// Esta función actualiza un elemento en la tabla.
+    
+function update_documents($data)
+    { 
+        $this->recn = $data['d_recn'];   
+        $this->Document = $data['d_Document'];   
+        $this->Scanned = $data['d_Scanned'];
+        $this->AnimalRecn = $data['d_AnimalRecn'];  
+        $this->DateAdded = $data['d_DateAdded'];
+        $this->ScanLocation = $data['d_ScanLocation']; 
+		$this->User = $data['d_User'];
+        $this->DateEntered = $data['d_DateEntered'];  
+        
+        $this->db->where('recn', $data['d_recn']);
+        $this->db->update('documents',$this); 
+    }
+    
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función elimina un elemento en la tabla.
+
+public function del_documents($id)
+    {
+     $this->db->delete('documents', array('recn' => $id));
+    }
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función busca elementos en la tabla que cumplen con un criterio.
+
+public function find_documents($data)
+    {
+     $this->db->select('documents.*');
+     $this->db->from('documents');
+     $this->db->like('documents', $data['d_Documents']);
+     $this->db->like('DateAdded', $data['d_DateAdded']);
+	 $this->db->like('DateEntered', $data['d_DateEntered']);
+        
+     $query = $this->db->get();    
+     return $query->result_array();     
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de la tabla.
+
+public function get_documents()
+	{
+		$query = $this->db->get('documents');
+		return $query->result_array();     
+	}
+///////////////////////////////////////////////////////////////////////////////////// 
+
+	/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de un artículo solicitado.
+
+public function get_a_documents($id)
+	{
+		$query = $this->db->get_where('documents', array('recn' => $id));
+		return $query->result_array();     
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+}  //llave de la clase 
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

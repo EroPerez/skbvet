@@ -1,0 +1,44 @@
+// Alerts
+
+.alert-variant(@color) {
+
+
+
+  .alert-link,
+  & ,
+  h4{
+    color: @color;
+  }
+
+  &.alert-border-right { border-right-color: darken(@color, 13%); }
+  &.alert-border-top { border-top-color: darken(@color, 13%); }
+  &.alert-border-bottom { border-bottom-color: darken(@color, 13%); }
+  &.alert-border-left { border-left-color: darken(@color, 13%); }
+
+  // Color shade variants
+  &.light { color: lighten(@color, 15%); }
+  &.dark { color: darken(@color, 10%); }
+  &.pastel {
+    color: darken(@color, 15%);
+    border-color: rgba(0,0,0,0.1);
+
+    // Link color
+    .alert-link { 
+      color: darken(@color, 15%);
+    }
+
+    // Border settings
+    &.alert-micro {
+     border-color: lighten(@color, 10%);
+    }
+
+    // Adjust close link position
+    .close {
+      color: darken(@color, 15%);
+        &:hover { 
+          color: darken(@color, 15%);
+        }
+    }
+  }
+}
+

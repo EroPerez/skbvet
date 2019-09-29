@@ -1,0 +1,117 @@
+<?php
+class M_access extends CI_Model 
+{
+		
+///////////////////////////////////////////////////////////////////////////////////// 
+//Tabla tblCountries Atributos //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+var $idaccess = ''; 
+var $levels_idlevels = ''; 
+var $accesname = ''; 
+var $configuration = ''; 
+var $status = ''; 
+			
+/////////////////////////////////////////////////////////////////////////////////////     
+// Métodos de la clase tblCountries .
+/////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+//Construtor de la clase.
+
+public function __construct()
+	{
+	 parent::__construct();
+	 $this->load->database(); 
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+/// Esta función inserta un elemento en la tabla.
+
+public function set_access($data)
+    {     
+        $this->idaccess = $data['d_idaccess']; 
+        $this->levels_idlevels = $data['d_levels_idlevels']; 
+        $this->accesname = $data['d_accesname']; 
+        $this->configuration = $data['d_configuration'];  
+        $this->status = $data['d_status'];  
+
+        $resultado = $this->db->insert('access',$this); 
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////// 
+// Esta función actualiza un elemento en la tabla.
+    
+function update_access($data)
+    { 
+		$this->db->set('levels_idlevels', $data['d_levels_idlevels']);
+        $this->db->set('accesname', $data['d_accesname']);
+        $this->db->set('configuration', $data['d_configuration']);
+        $this->db->set('status', $data['d_status']);
+	    
+        $this->db->where('idaccess', $data['d_idaccess']);
+        
+        $this->db->update('access');
+    }
+    
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función elimina un elemento en la tabla.
+
+public function del_access($idaccess)
+    {
+     $this->db->delete('access', array('idaccess' => $idaccess));
+    }
+/////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta función busca elementos en la tabla por nombre
+
+public function find_access($data)
+    {
+     $this->db->select('access.*');
+     $this->db->from('access');
+     $this->db->like('accesname', $data['d_accesname']);  
+     $this->db->like('status', $data['d_status']);     
+     
+     $query = $this->db->get();    
+     return $query->result_array();     
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de un elemento solicitado.
+
+public function get_one_access($idaccess)
+	{
+		$query = $this->db->get_where('access', array('idaccess' => $idaccess));
+		return $query->result_array();     
+	}                                     
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de todos los elementos.
+
+public function get_all_access()
+	{
+		$query = $this->db->get('access');
+		return $query->result_array();     
+	}
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los accesos por level.
+public function get_acceso_by_level($level){
+       $this->db->select('*');
+       $this->db->from('access');
+       $this->db->where('levels_idlevels', $level);
+       $query = $this->db->get();
+        return $query->result_array();  
+}    
+
+}   
+
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

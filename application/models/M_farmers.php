@@ -1,0 +1,121 @@
+<?php
+
+class M_farmers extends CI_Model {
+
+///////////////////////////////////////////////////////////////////////////////////// 
+//Tabla tblFarmers Atributos //////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+    var $recn = '';
+    var $fName = '';
+    var $lName = '';
+    var $address1 = '';
+    var $address2 = '';
+    var $dateAdded = '';
+    var $Phone = ''; //OJO puede estar cambiado
+
+/////////////////////////////////////////////////////////////////////////////////////     
+// M�todos de la clase tblFarmers.
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//Construtor de la clase.
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////   
+/// Esta funci�n inserta un elemento en la tabla.
+
+    public function set_farmers($data) {
+        //$this->recn = $data['d_recn'];   
+        $this->fName = $data['d_fName'];
+        $this->lName = $data['d_lName'];
+        $this->address1 = $data['d_address1'];
+        //$this->address2 = $data['d_address2'];
+        $this->dateAdded = $data['d_dateAdded'];
+        $this->Phone = $data['d_Phone'];
+
+        $this->db->insert('tblfarmers', $this);
+        $resultado = $this->db->insert_id();
+        return $resultado;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////// 
+// Esta funci�n actualiza un elemento en la tabla.
+
+    function update_farmers($data) {
+        $this->recn = $data['d_recn'];
+        $this->fName = $data['d_fName'];
+        $this->lName = $data['d_lName'];
+        $this->address1 = $data['d_address1'];
+        //$this->address2 = $data['d_address2'];
+        $this->dateAdded = $data['d_dateAdded'];
+        $this->Phone = $data['d_Phone'];
+
+        $this->db->where('recn', $data['d_recn']);
+        $this->db->update('tblfarmers', $this);
+        return $this->recn;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta funci�n elimina un elemento en la tabla.
+
+    public function del_farmers($id) {
+        return $this->db->delete('tblfarmers', array('recn' => $id));
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////   
+// Esta funci�n busca elementos en la tabla que cumplen con un criterio.
+
+    public function find_farmers($data) {
+        $this->db->select('tblfarmers.*');
+        $this->db->from('tblfarmers');
+        $this->db->or_like('recn', $data['d_recn']);
+        $this->db->or_like('fName', $data['d_fName']);
+        $this->db->or_like('lName', $data['d_lName']);
+        $this->db->or_like('address1', $data['d_address1']);
+        $this->db->or_like('dateAdded', $data['d_dateAdded']);
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de la tabla.
+
+    public function get_farmers() {
+        $query = $this->db->get('tblfarmers');
+        return $query->result_array();
+    }
+
+///////////////////////////////////////////////////////////////////////////////////// 
+    /////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de un art�culo solicitado.
+
+    public function get_a_farmers($id) {
+        $query = $this->db->get_where('tblfarmers', array('recn' => $id));
+        return $query->result_array();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////
+/// Retorna todos los datos de la tabla paginados.
+
+    public function get_farmers_pagination($page) {
+
+        $query = $this->db->get('tblfarmers', 1, $page);
+        return $query->result_array();
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

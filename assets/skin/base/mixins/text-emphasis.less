@@ -1,0 +1,13 @@
+// Typography
+
+.text-emphasis-variant(@color) {
+  color: @color!important;
+  a&:hover {
+    color: darken(@color, 50%)!important;
+  }
+
+  &-light { color: lighten(@color, 3.5%)!important; }
+  &-lighter { color: lighten(@color, 7.5%)!important; }
+  &-dark { color: darken(@color, 3.5%)!important; }
+  &-darker { color: darken(@color, 7.5%)!important; }
+}
