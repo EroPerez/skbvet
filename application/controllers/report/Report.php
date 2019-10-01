@@ -10,16 +10,20 @@ class Report extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        } else {
+//
+//            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
+//        }
 
         $this->load->helper('my_uri');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_tblcommodities', 'M_specimenpermit', 'M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tbltraders', 'M_tradeliveanimals', 'M_tradeliveanimalsdetails', 'M_tradeproducts', 'M_surveillance', 'M_caseillnesses', 'M_tradeliveanimals', 'M_casedetails'));
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function rpt_import_licences() {
@@ -46,6 +50,7 @@ class Report extends My_Controller {
 
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/import_licences_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_animal_illness_cases() {
@@ -70,10 +75,11 @@ class Report extends My_Controller {
         $data['comimp_date'] = $date;
         $data['year_filter'] = $year_filter;
 
-        $data['title'] = 'Animal Illness Cases';
+        $data['title'] = 'Animals Illness Cases Report';
         $data['pag'] = 'report';
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/animal_illness_cases_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_animal_imported() {
@@ -92,24 +98,26 @@ class Report extends My_Controller {
         if ($time_filter == 1)
             $data['import_imported'] = $this->M_tradeliveanimals->get_yearly_number_of_animal_imported_by_species($year_filter, $animalimp_species);
 
-        $data['title'] = 'Animal Imported';
+        $data['title'] = 'Animals Import Licences Report';
         $data['pag'] = 'report';
         $data['species'] = $this->M_tblspecies->get_all_Species();
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/animal_imported_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_withdrawal_period() {
 
-        $data['title'] = 'Withdrawal Period';
+        $data['title'] = 'Withdrawal Period Report';
         $data['pag'] = 'report';
         $data['withdrawal_period'] = $this->M_caseillnesses->get_animal_in_withdrawal_period();
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/withdrawal_period_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_number_of_biological() {
-        $data['title'] = 'Number of Biological  Specimen Permit Issued';
+        $data['title'] = 'Number of Biological Specimen Permit Issued Report';
         $data['pag'] = 'report';
 
         $time_filter = $this->input->post('time_filter');
@@ -129,10 +137,11 @@ class Report extends My_Controller {
         $data['year_filter'] = $year_filter;
         $this->data_template['script'] = $this->load->view('pages/s_specimen', NULL, TRUE);
         $this->render('report/number_of_biological_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_export_animals() {
-        $data['title'] = 'Export Animals';
+        $data['title'] = 'Animals Export Licences Report';
         $data['pag'] = 'report';
         $time_filter = $this->input->post('time_filter');
 
@@ -153,10 +162,11 @@ class Report extends My_Controller {
         $data['year_filter'] = $year_filter;
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/export_animals_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_export_meats() {
-        $data['title'] = 'Export Meats';
+        $data['title'] = 'Meats Export Licences Report';
         $data['pag'] = 'report';
 
         $time_filter = $this->input->post('time_filter');
@@ -176,6 +186,7 @@ class Report extends My_Controller {
         $data['year_filter'] = $year_filter;
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
         $this->render('report/export_meats_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function rpt_surveillance() {
@@ -199,6 +210,7 @@ class Report extends My_Controller {
         $this->data_template['script'] = $this->load->view('pages/s_report', NULL, TRUE);
 
         $this->render('report/surveillance_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
 }

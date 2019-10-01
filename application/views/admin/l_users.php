@@ -11,7 +11,6 @@
                         <div class="content" style="margin: 10px;">
                             <div class="gj-float-right" style="padding-bottom: 10px;">
                                 <button type="button" id="btnAdd" class="btn btn-alert" data-toggle="modal" onclick="limpiar_addmodal()" data-target="#adduser_Modal"><i class="fa fa-plus" ></i>Add User</button>
-
                             </div>
                             <table id="table_user" class="table table-hover">
                                 <thead>
@@ -78,7 +77,6 @@
                     <!-- AQUI-->
                     <form  role="form" id="form-edituser" method="post" action="/">    
                         <div class="section row" >
-
                             <div class="col-md-12 col-xs-12">
                                 <div class="section-divider"><span>Password</span></div>
                                 <label class="field prepend-icon">

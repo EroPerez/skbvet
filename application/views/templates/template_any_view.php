@@ -10,8 +10,11 @@
         <!-- Stylesheets-->
         <link rel="icon" href="<?php echo view_css('img/favicon.ico'); ?>" type="image/x-icon">
         <!-- Stylesheets-->
-        <link href="<?php echo view_css('plugins/css/tagmanager.css'); ?>" rel="stylesheet">
-        <link href="<?php echo view_css('admin-tools/admin-forms/css/admin-forms.css'); ?>" rel="stylesheet">
+        <!--<link href="<?php echo view_css('plugins/css/tagmanager.css'); ?>" rel="stylesheet">-->
+        <?php if (!isset($jsscript['hide_admin_forms'])) { ?>
+            <link href = "<?php echo view_css('admin-tools/admin-forms/css/admin-forms.css'); ?>" rel = "stylesheet">
+        <?php } ?>
+
         <link rel="stylesheet" type="text/css" href="<?php echo view_css('fonts/stateface/stateface.css'); ?>">
         <link href="<?php echo view_css('plugins/css/magnific-popup.css'); ?>" rel="stylesheet">
 
@@ -22,7 +25,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo view_css('plugins/css/jquery.dataTables.css'); ?>"> 
         <link rel="stylesheet" type="text/css" href="<?php echo view_css('plugins/css/buttons.dataTables.css'); ?>"> 
         <!-- Stylesheets datagrid easyui
-        <link rel="stylesheet" type="text/css" href="<?php //echo view_css('skin/default_skin/css/easyui.css');         ?>">-->
+        <link rel="stylesheet" type="text/css" href="<?php //echo view_css('skin/default_skin/css/easyui.css');                                               ?>">-->
         <!-- Stylesheets theme aplication-->
         <link rel="stylesheet" type="text/css" href="<?php echo view_css('skin/default_skin/css/theme.css'); ?>">
         <link rel="stylesheet" type="text/css" href="<?php echo view_css('plugins/css/tagmanager.css'); ?>">         
@@ -55,7 +58,8 @@
             foreach ($jsscript['css_files'] as $file):
                 ?>
                 <link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
-            <?php endforeach;
+                <?php
+            endforeach;
         }
         ?>
         <!--[if lt IE 10]>
@@ -167,9 +171,11 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="p5 flexbox align-items-center pl25 br-l">
-                        <div class="navbar-btn btn-group"><a href="#" data-toggle="button" class="topbar-menu-toggle btn btn-sm bg-paris-daisy circle"><span class="fa fa-magic"></span><span class="badge badge-success">6</span></a></div>
-                    </li>                    
+                    <?php if (can(array('surveillance-report', 'number-of-biological-report', 'import-licences-report', 'export-meats-report', 'animal-imported-report', 'animal-imported-report', 'export-animals-report', 'animal-illness-cases-report', 'withdrawal-period-report'))): ?>
+                        <li class="p5 flexbox align-items-center pl25 br-l">
+                            <div class="navbar-btn btn-group"><a href="#" data-toggle="button" class="topbar-menu-toggle btn btn-sm bg-paris-daisy circle"><span class="fa fa-magic"></span><span class="badge badge-success">8</span></a></div>
+                        </li>                    
+                    <?php endif ?>
 
                     <li class="dropdown menu-merge">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle fs16 fw400 flexbox align-items-center">
@@ -182,9 +188,14 @@
                             </div>
                         </a>
                         <ul role="menu" class="dropdown-menu list-group dropdown-persist w250">
-                            <li class="list-group-item"><a href="#" class="animated animated-short fadeInUp"><span class="fa fa-user"></span> <?php echo $this->session->userdata('user'); ?></a></li>
+                            <li class="list-group-item"><a href="#" class="animated animated-short fadeInUp"><span class="fa fa-user"></span> <?php echo $this->session->userdata('name'); ?></a></li>
 
-                            <li class="list-group-item"><a href="<?php echo site_url('mainten/users'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-gear"></span> Settings</a></li>
+                            <?php if (can(array('index-users'))) { ?>
+                                <li class="list-group-item"><a href="<?php echo site_url('users'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-gear"></span> Users</a></li>
+                            <?php } ?>
+                            <?php if (can(array('index-permissions'))) { ?>
+                                <li class="list-group-item"><a href="<?php echo site_url('permissions'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-lock"></span> Permissions</a></li>
+                            <?php } ?>
                             <li class="dropdown-footer"><a href="<?php echo site_url('auth/logout'); ?>"><span class="fa fa-power-off pr5"></span> Logout</a></li>
                         </ul>
                     </li>
@@ -195,75 +206,142 @@
                 <!-- Start: Sidebar Left Content-->
                 <div class="sidebar-left-content nano-content">
                     <!-- Sidebar Widget - Menu (slidedown)-->
-<!--                    <div class="sidebar-widget menu-widget">
-
-                    </div>-->
+                    <!--                    <div class="sidebar-widget menu-widget">
+                    
+                                        </div>-->
                     <!-- Sidebar Widget - Search (hidden)-->
-                    <div class="sidebar-widget search-widget hidden">
-                        <div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span>
-                            <input id="sidebar-search" type="text" placeholder="Search..." class="form-control"/>
-                        </div>
-                    </div>
-                    <ul class="nav sidebar-menu ">
+                    <!--                    <div class="sidebar-widget search-widget hidden">
+                                            <div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                <input id="sidebar-search" type="text" placeholder="Search..." class="form-control"/>
+                                            </div>
+                                        </div>-->
+                    <ul class="nav sidebar-menu mt-5">
                         <li class="sidebar-label">Option Menu</li>
 
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/dashboard'); ?>" class="accordion-toggle <?php if ($pag == 'Dashboard') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-dashboard "></span><span class="sidebar-title">Dashboard</span></a>
+                        <li class="sidebar-menu-item ">
+                            <a href="<?php echo site_url('pages/dashboard'); ?>" class="accordion-toggle <?php if ($pag == 'Dashboard') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-dashboard "></span><span class="sidebar-title">Dashboard</span></a>
                         </li>
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/farm'); ?>" class="accordion-toggle <?php if ($pag == 'farm') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-home"></span><span class="sidebar-title">Farm</span></a>
-                        </li>
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/illness'); ?>" class="accordion-toggle <?php if ($pag == 'illness') { ?>menu-open<?php } ?>"><span class="fa fa-flash"></span><span class="sidebar-title">Illness</span></a>
-                        </li>                        
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/comimp'); ?>" class="accordion-toggle <?php if ($pag == 'comimp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Comp.Imp</span></a>
-                        </li>
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/comexp'); ?>" class="accordion-toggle <?php if ($pag == 'comexp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-left"></span><span class="sidebar-title">Comp.Exp</span></a>
-                        </li>
-                        <li class="sidebar-menu-item"><a href="<?php echo site_url('pages/animalimp'); ?>" class="accordion-toggle <?php if ($pag == 'animimp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Animal Imp</span></a>
-                        </li>
-                        <li class="sidebar-menu-item"><a href="<?php echo site_url('pages/animalexp'); ?>" class="accordion-toggle <?php if ($pag == 'animexp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-left"></span><span class="sidebar-title">Animal Exp</span></a>
-                        </li>
+                        <?php if (can(array('index-farm'))) { ?>
+                            <li class="sidebar-menu-item ">
+                                <a href="<?php echo site_url('pages/farm'); ?>" class="accordion-toggle <?php if ($pag == 'farm') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-home"></span><span class="sidebar-title">Farm</span></a>
+                            </li>
+                        <?php } ?>
+                        <?php if (can(array('index-illness'))) { ?>
+                            <li class="sidebar-menu-item ">
+                                <a href="<?php echo site_url('pages/illness'); ?>" class="accordion-toggle <?php if ($pag == 'illness') { ?>menu-open<?php } ?>"><span class="fa fa-flash"></span><span class="sidebar-title">Illness</span></a>
+                            </li>   
+                        <?php } ?>
+                        <?php if (can(array('index-comimp'))) { ?>
+                            <li class="sidebar-menu-item ">
+                                <a href="<?php echo site_url('pages/comimp'); ?>" class="accordion-toggle <?php if ($pag == 'comimp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Comp.Imp</span></a>
+                            </li>
+                        <?php } ?>
+                        <?php if (can(array('index-comexp'))) { ?>
+                            <li class="sidebar-menu-item ">
+                                <a href="<?php echo site_url('pages/comexp'); ?>" class="accordion-toggle <?php if ($pag == 'comexp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-left"></span><span class="sidebar-title">Comp.Exp</span></a>
+                            </li>
+                        <?php } ?>
+                        <?php if (can(array('index-animalimp'))) { ?>
+                            <li class="sidebar-menu-item">
+                                <a href="<?php echo site_url('pages/animalimp'); ?>" class="accordion-toggle <?php if ($pag == 'animimp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Animal Imp</span></a>
+                            </li>
+                        <?php } ?>
+                        <?php if (can(array('index-animalexp'))) { ?>
+                            <li class="sidebar-menu-item">
+                                <a href="<?php echo site_url('pages/animalexp'); ?>" class="accordion-toggle <?php if ($pag == 'animexp') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-left"></span><span class="sidebar-title">Animal Exp</span></a>
+                            </li>
+                        <?php } ?>
                         <!--<li class="sidebar-label">Elements</li> -->
-                        <li class="sidebar-menu-item" ><a href="<?php echo site_url('pages/transfer'); ?>" class="accordion-toggle <?php if ($pag == 'transfer') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-transfer"></span><span class="sidebar-title">Transfer/Sales</span></a>
+                        <?php if (can(array('index-transfer'))) { ?>
+                            <li class="sidebar-menu-item" >
+                                <a href="<?php echo site_url('pages/transfer'); ?>" class="accordion-toggle <?php if ($pag == 'transfer') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-transfer"></span><span class="sidebar-title">Transfer/Sales</span></a>
+                            </li>
+                        <?php } ?>
+<!--                        <li class="sidebar-menu-item" ><a href="<?php // echo site_url('pages/abbatoir');                                        ?>" class="accordion-toggle"><span class="glyphicon glyphicon-remove"></span><span class="sidebar-title">Abbatoir</span></a>
+</li>-->
+                        <?php if (can(array('index-specimen'))) { ?>
+                            <li class="sidebar-menu-item" >
+                                <a href="<?php echo site_url('pages/specimen'); ?>" class="accordion-toggle <?php if ($pag == 'specimen') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Specimen Permits</span></a>
+                            </li>
+                        <?php } ?>
+                        <?php if (can(array('index-surveillance'))) { ?>
+                            <li class="sidebar-menu-item ">
+                                <a href="<?php echo site_url('pages/surveillance'); ?>" class="accordion-toggle <?php if ($pag == 'surveillance') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Surveillance</span></a>
+                            </li>
+                        <?php } ?>
+                        <li class="sidebar-menu-item">
+                            <?php if (can(array('surveillance-report', 'number-of-biological-report', 'import-licences-report', 'export-meats-report', 'animal-imported-report', 'animal-imported-report', 'export-animals-report', 'animal-illness-cases-report', 'withdrawal-period-report'))) { ?>
+                                <a href="#" class="accordion-toggle <?php if ($pag == 'report') { ?>menu-open<?php } ?>"><span class="fa fa-magic"></span><span class="sidebar-title">Reports</span></a>
+                                <ul class="nav sub-nav">
+                                    <?php if (can(array('import-licences-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/import-licences'); ?>"><span class="fa fa-search"></span>Meats Import Licences</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('export-meats-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/export-meats'); ?>"><span class="fa fa-search"></span>Meats Export Licences</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('animal-imported-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/animal-imported'); ?>"><span class="fa fa-search"></span>Animal Import Licences</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('export-animals-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/export-animals'); ?>"><span class="fa fa-search"></span>Animal Export Licences</a>
+                                        </li> 
+                                    <?php } ?>
+                                    <?php if (can(array('animal-illness-cases-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/animal-illness-cases'); ?>"><span class="fa fa-search"></span>Illness Cases</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('withdrawal-period-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/withdrawal-period'); ?>"><span class="fa fa-search"></span>Withdrawal Period</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('number-of-biological-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/number-of-biological'); ?>"><span class="fa fa-search"></span>Permit Issued</a>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (can(array('surveillance-report'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('report/surveillance'); ?>"><span class="fa fa-search"></span>Surveillance</a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            <?php } ?>
                         </li>
-<!--                        <li class="sidebar-menu-item" ><a href="<?php // echo site_url('pages/abbatoir');  ?>" class="accordion-toggle"><span class="glyphicon glyphicon-remove"></span><span class="sidebar-title">Abbatoir</span></a>
-                        </li>-->
-                        <li class="sidebar-menu-item" ><a href="<?php echo site_url('pages/specimen'); ?>" class="accordion-toggle <?php if ($pag == 'specimen') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Specimen Permits</span></a>
-                        </li>
-                        <li class="sidebar-menu-item "><a href="<?php echo site_url('pages/surveillance'); ?>" class="accordion-toggle <?php if ($pag == 'surveillance') { ?>menu-open<?php } ?>"><span class="glyphicon glyphicon-arrow-right"></span><span class="sidebar-title">Surveillance</span></a>
-                        </li>
-                        <li class="sidebar-menu-item"><a href="#" class="accordion-toggle <?php if ($pag == 'report') { ?>menu-open<?php } ?>"><span class="fa fa-magic"></span><span class="sidebar-title">Reports</span></a>
-                            <ul class="nav sub-nav">
-                                <li><a href="<?php echo site_url('report/import-licences'); ?>"><span class="fa fa-search"></span>Meats Import Licences</a>
-                                </li>
-                                <li><a href="<?php echo site_url('report/animal-imported'); ?>"><span class="fa fa-search"></span>Animal Imported Licences</a>
-                                </li>
 
-                                <li><a href="<?php echo site_url('report/export-animals'); ?>"><span class="fa fa-search"></span>Export Animal Licences</a>
-                                </li>
-                                <li><a href="<?php echo site_url('report/export-meats'); ?>"><span class="fa fa-search"></span>Export Meats Licences</a>
-                                </li>
-                                <li><a href="<?php echo site_url('report/animal-illness-cases'); ?>"><span class="fa fa-search"></span>Illness Cases</a>
-                                </li>
-                                <li><a href="<?php echo site_url('report/withdrawal-period'); ?>"><span class="fa fa-search"></span>Withdrawal Period</a>
-                                </li>
-                                <li><a href="<?php echo site_url('report/number-of-biological'); ?>"><span class="fa fa-search"></span>Permit Issued</a>
-                                </li>
-
-                                <li><a href="<?php echo site_url('report/surveillance'); ?>"><span class="fa fa-search"></span>Surveillance</a>
-                                </li>
-                            </ul>
-                        </li> 
                         <li class="sidebar-label">Maintenance</li>
-                        <li class="sidebar-menu-item"><a href="#" class="accordion-toggle <?php if ($pag == 'user') { ?>menu-open<?php } ?>"><span class="fa fa-cog"></span><span class="sidebar-title">Setting</span></a>
-                            <ul class="nav sub-nav">
-                                <li><a href="<?php echo site_url('mainten/users'); ?>"><span class="fa fa-user"></span>Users</a>
-                                </li>
-                                <li><a href="<?php echo site_url('mainten/level'); ?>"><span class="fa fa-cogs"></span>Permitions</a>
-                                </li>
-                            </ul>
-                        </li> 
-                        <li class="sidebar-menu-item"><a href="<?php echo site_url('pages/setup'); ?>" class="accordion-toggle <?php if ($pag == 'setup') { ?>menu-open<?php } ?>"><span class="fa fa-rocket"></span><span class="sidebar-title">Setup</span></a>
+                        <?php if (can(array('index-users', 'index-permissions'))) { ?>
+                            <li class="sidebar-menu-item">
+                                <a href="#" class="accordion-toggle <?php if ($pag == 'user') { ?>menu-open<?php } ?>"><span class="fa fa-cog"></span><span class="sidebar-title">Setting</span></a>
+                                <ul class="nav sub-nav">
+                                    <?php if (can(array('index-users'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('users'); ?>"><span class="fa fa-user"></span>Users</a>
+                                        </li>
+                                    <?php } if (can(array('index-permissions'))) { ?>
+                                        <li>
+                                            <a href="<?php echo site_url('permissions'); ?>"><span class="fa fa-lock"></span>Permissions</a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </li> 
+                        <?php } ?>
+                        <?php if (can(array('index-setup'))) { ?>
+                            <li class="sidebar-menu-item">
+                                <a href="<?php echo site_url('pages/setup'); ?>" class="accordion-toggle <?php if ($pag == 'setup') { ?>menu-open<?php } ?>"><span class="fa fa-rocket"></span><span class="sidebar-title">Setup</span></a>
+                            </li>
+                        <?php } ?>
+                        <li class="list-group-item">
+                            <a href="<?php echo site_url('auth/logout'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-power-off "></span><span class="sidebar-title">Logout</span> </a>
                         </li>
-                        <li class="list-group-item"><a href="<?php echo site_url('auth/logout'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-power-off "></span><span class="sidebar-title">Logout</span> </a></li>
                         <!-- sidebar bullets-->
                         <!-- sidebar progress bars-->
                     </ul>
@@ -276,20 +354,37 @@
                 <!-- Start: Topbar-Dropdown-->
                 <div id="topbar-dropmenu" class="alt">
                     <div class="topbar-menu row">
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/import-licences'); ?>" class="metro-tile bg-primary light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Meat Import</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/export-meats'); ?>" class="metro-tile bg-info light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Meat Export</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/animal-imported'); ?>" class="metro-tile bg-success light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Animal Import</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/export-animals'); ?>" class="metro-tile bg-system light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Animal Export</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/animal-illness-cases'); ?>" class="metro-tile bg-warning light"><span class="fa fa-search text-muted"></span><span class="metro-title">Illness Case</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/surveillance'); ?>" class="metro-tile bg-alert light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Surveillance</span></a></div>
-<!--                        <div class="col-xs-4 col-sm-2"><a href="<?php // echo site_url('report/Report/rpt_surveillance'); ?>" class="metro-tile bg-alert light"><span class="glyphicon glyphicon-picture text-muted"></span><span class="metro-title">Surveillance</span></a></div>
-                        <div class="col-xs-4 col-sm-2"><a href="<?php // echo site_url('report/Report/rpt_surveillance'); ?>" class="metro-tile bg-alert light"><span class="glyphicon glyphicon-picture text-muted"></span><span class="metro-title">Surveillance</span></a></div>-->
+                        <?php if (can(array('import-licences-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/import-licences'); ?>" class="metro-tile bg-primary light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Meat Import</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('export-meats-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/export-meats'); ?>" class="metro-tile bg-info light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Meat Export</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('animal-imported-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/animal-imported'); ?>" class="metro-tile bg-success light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Animal Import</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('export-animals-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/export-animals'); ?>" class="metro-tile bg-system light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Animal Export</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('animal-illness-cases-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/animal-illness-cases'); ?>" class="metro-tile bg-warning light"><span class="fa fa-search text-muted"></span><span class="metro-title">Illness Case</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('surveillance-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/surveillance'); ?>" class="metro-tile bg-alert light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Surveillance</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('number-of-biological-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/number-of-biological'); ?>" class="metro-tile bg-system light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Specimen Permit Issued</span></a></div>
+                        <?php endif ?>
+                        <?php if (can(array('withdrawal-period-report'))): ?>
+                            <div class="col-xs-4 col-sm-2"><a href="<?php echo site_url('report/withdrawal-period'); ?>" class="metro-tile bg-danger light"><span class="glyphicon glyphicon-search text-muted"></span><span class="metro-title">Withdrawal Period</span></a></div>
+                        <?php endif ?>
                     </div>
                 </div>                
                 <!-- Begin: Content-->
-                <section id="content" class="animated fadeIn"></section>
-                <!--AQUI PONGO EL CONTENIDO -->
-<?php echo $the_view_content ?>
+                <section id="content" class="animated fadeIn">
+                    <!--AQUI PONGO EL CONTENIDO -->
+                    <?php echo $the_view_content ?>
+                </section>
             </section>
             <!-- Start: Right Sidebar-->
 
@@ -332,13 +427,15 @@
 
         <?php echo $jsscript['script']; ?>
 
-        <?php if (isset($jsscript['js_files'])) {
+        <?php
+        if (isset($jsscript['js_files'])) {
             foreach ($jsscript['js_files'] as $file):
                 ?>
                 <script src="<?php echo $file; ?>"></script>
-    <?php endforeach;
-}
-?>
+                <?php
+            endforeach;
+        }
+        ?>
 <!--        <script type="text/javascript">
 window.onload = function () {
 //hideGroups();

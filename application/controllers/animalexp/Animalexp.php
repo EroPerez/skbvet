@@ -11,20 +11,25 @@ class Animalexp extends My_Controller {
 
         parent::__construct();
 
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        } else {
+//
+//            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
+//        }
+        
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tbltraders', 'M_tradeliveanimals', 'M_tradeliveanimalsdetails'));
+        
+                
+        //new authentication method
+        $this->auth->route_access();
     }
 
     function index($action, $recn = NULL) {
-        $data['title'] = 'Export of Live Animals';
+        $data['title'] = 'Live Animals Licence (Exp)';
         $data['pag'] = 'animexp';
         $data['parish'] = $this->M_tbldistricts->get_all_Districts();
         $data['country'] = $this->M_tblcountries->get_all_Countries();
@@ -41,7 +46,7 @@ class Animalexp extends My_Controller {
 
         $data = array();
         try {
-            $data['title'] = 'Export of Live Animals List';
+            $data['title'] = 'Live Animals Licences (Exp) List';
             $data['pag'] = '';
 
             $crud = new grocery_CRUD();
@@ -49,7 +54,7 @@ class Animalexp extends My_Controller {
 
             $crud->set_theme('datatables');
             $crud->set_table('tbltradeliveanimals');
-            $crud->set_subject('Export of Live Animals');
+            $crud->set_subject('Licence (Exp)');
             $crud->unset_clone();
             $crud->unset_edit();
             $crud->unset_read();

@@ -14,17 +14,21 @@ class Setup extends My_Controller {
           redirect(site_url('Init'));
           } */
 
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        }
 
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts',
-            'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tblcommodities',
-            'M_tblillnessnames', 'M_tblowners', 'M_tbltraders', 'M_tbltreatmentnames', 'M_tblveterinarians',
-            'M_tbltestnames'));
+          'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tblcommodities',
+          'M_tblillnessnames', 'M_tblowners', 'M_tbltraders', 'M_tbltreatmentnames', 'M_tblveterinarians',
+          'M_tbltestnames'));
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index() {
@@ -47,9 +51,10 @@ class Setup extends My_Controller {
         $data['veterinarians'] = $this->M_tblveterinarians->get_all_Veterinarians();
         $data['testnames'] = $this->M_tbltestnames->get_all_testnames();
         //Termina Agregado por Laura 23-03-2017
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
+//        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
         $this->data_template['script'] = $this->load->view('pages/s_setup', TRUE, TRUE);
         $this->render('pages/setup_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -61,10 +66,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcommodities->set_Commodities($namecomm);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,10 +83,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcommodities->update_Commodities($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,10 +98,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcommodities->del_Commodities($idcomm[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +113,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id="optcom_' . $value["recn"] . '" data-commod="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,10 +129,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcountries->set_countries($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,10 +147,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcountries->update_countries($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,10 +162,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblcountries->del_countries($idcountries[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +177,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblcountries->get_one_countries($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,6 +187,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optcountries_' . $value["recn"] . '" data-countries="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,10 +204,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblillnessnames->set_illnessname($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,10 +222,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblillnessnames->update_illnessname($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,10 +237,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblillnessnames->del_illnessname($idillnessname[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,6 +252,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblillnessnames->get_one_illnessname($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +262,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optillnessname_' . $value["recn"] . '" data-illnessname="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,10 +278,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblspecies->set_Species($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     function add_breeds() {
@@ -262,10 +292,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblbreeds->set_breeds($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,10 +309,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblspecies->update_Species($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     function edit_breeds() {
@@ -291,10 +325,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblbreeds->update_breeds($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -304,10 +340,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblspecies->del_Species($idspecies[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     function delete_breeds() {
@@ -315,10 +353,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblbreeds->del_breeds($idspecies[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,6 +368,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblspecies->get_one_Species($recn);
         print_r(json_encode($result));
+
     }
 
     function get_one_breeds() {
@@ -335,6 +376,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblbreeds->get_one_breeds($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,6 +386,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optspecies_' . $value["recn"] . '" data-species="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     function listar_breeds() {
@@ -351,6 +394,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optbreeds_' . $value["recn"] . '" data-breeds="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -367,10 +411,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltraders->set_Traders($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,10 +429,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltraders->update_Traders($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -396,10 +444,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltraders->del_Traders($idtrader[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -409,6 +459,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tbltraders->get_one_Traders($recn);
         print_r(json_encode($result));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,6 +470,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "opttraders_' . $value["recn"] . '" data-traders="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -435,10 +487,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltreatmentnames->set_Treatmentnames($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -451,10 +505,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltreatmentnames->update_treaTmentnames($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,10 +520,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltreatmentnames->del_Treatmentnames($idtreatmentnames[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,6 +535,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tbltreatmentnames->get_one_Treatmentnames($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -486,6 +545,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "opttreatmentnames_' . $value["recn"] . '" data-treatmentnames="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,10 +561,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblunits->set_Units($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -516,10 +578,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblunits->update_Units($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -529,10 +593,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblunits->del_Units($idunits[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -542,6 +608,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblunits->get_one_Units($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -551,6 +618,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optunits_' . $value["recn"] . '" data-units="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -566,10 +634,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblveterinarians->set_Veterinarians($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -581,10 +651,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblveterinarians->update_Veterinarians($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -594,10 +666,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblveterinarians->del_veterinarians($idveterinarians[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -607,6 +681,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblveterinarians->get_one_Veterinarians($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -616,6 +691,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optveterinarians_' . $value["recn"] . '" data-traders="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -632,10 +708,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbldistricts->set_Districts($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -648,10 +726,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbldistricts->update_Districts($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -661,10 +741,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbldistricts->del_Districts($iddistricts[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -674,6 +756,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tbldistricts->get_one_Districts($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -683,6 +766,7 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optdistricts_' . $value["recn"] . '" data-traders="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -698,10 +782,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblowners->set_Owners($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -713,10 +799,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblowners->update_Owners($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -726,10 +814,12 @@ class Setup extends My_Controller {
         $result = $this->M_tblowners->del_Owners($idowners[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,6 +829,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tblowners->get_one_Owners($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -748,40 +839,45 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "optowners_' . $value["recn"] . '" data-traders="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////// OWNERS END///////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-     ///////SETUP ADD testnames////////////////////////////////////////////////////////////////////////////////////
+    ///////SETUP ADD testnames////////////////////////////////////////////////////////////////////////////////////
     function add_testnames() {
         $data['d_name'] = $this->input->post('name');
-     
+
         $result = $this->M_tbltestnames->set_testnames($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////SETUP EDIT testnames/////////////////////////////////////////////////////////////////////////////////
     function edit_testnames() {
         $data['d_name'] = $this->input->post('name');
-        
+
         $temp = $this->input->post('recn');
-        
+
         $data['d_recn'] = $temp[0];
         $result = $this->M_tbltestnames->update_testnames($data);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been stored into the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -791,10 +887,12 @@ class Setup extends My_Controller {
         $result = $this->M_tbltestnames->del_testnames($idtestnames[0]);
         if ($result > 0) {
             $estado = array("state" => "Your data has been successfully deleted from the database.");
-        } else {
+        }
+        else {
             $estado = array("state" => "Your data has not been deleted from the database.");
         }
         print_r(json_encode($estado));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -804,6 +902,7 @@ class Setup extends My_Controller {
         $recn = $recn[0];
         $result = $this->M_tbltestnames->get_one_testnames($recn);
         print_r(json_encode($result));
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -813,7 +912,9 @@ class Setup extends My_Controller {
         foreach ($result as $key => $value) {
             echo '<option id = "opttestnames_' . $value["recn"] . '" data-testnames="' . $value["name"] . '" value="' . $value["recn"] . '" >' . $value["name"] . '</option>';
         }
+
     }
+
 }
 
 // NO BORRAR. Llave de la clase

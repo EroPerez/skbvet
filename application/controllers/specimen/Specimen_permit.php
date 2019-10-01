@@ -5,23 +5,27 @@ if (!defined('BASEPATH'))
 
 class Specimen_Permit extends My_Controller {
 
-    var $header_view, $footer_view, $data_template = NULL, $accesos, $auth;
+    var $header_view, $footer_view, $data_template = NULL;
 
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        }
-        $this->auth = $this->session->userdata('autenticado');
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        }
+//        $this->auth = $this->session->userdata('autenticado');
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_tblcountries', 'M_specimenpermit'));
 
 
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
-        $accesos = $this->data_template['accesos']['farm_farmers']['allow_intro_edit'];
+//        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
+//        $accesos = $this->data_template['accesos']['farm_farmers']['allow_intro_edit'];
+        
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index($action, $recn = NULL) {
@@ -33,6 +37,7 @@ class Specimen_Permit extends My_Controller {
         $this->data_template['script'] = $this->load->view('pages/s_specimen', $operation, TRUE);
 
         $this->render('pages/specimen_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function Specimen_Permit_list() {
@@ -63,7 +68,7 @@ class Specimen_Permit extends My_Controller {
             $crud->add_action('View', '', '', 'ui-icon-document', array($this, 'crud_view_action'));
             $crud->add_action('Edit', '', '', 'ui-icon-pencil', array($this, 'crud_edit_action'));
             $crud->callback_delete(array($this, 'delete_callback'))
-                    ->order_by('recn', 'desc');
+              ->order_by('recn', 'desc');
 
             $obj = $crud->render();
             $data['output'] = $obj->output;
@@ -73,43 +78,51 @@ class Specimen_Permit extends My_Controller {
             $this->data_template['script'] = $this->load->view('pages/s_specimen', array('action' => '', 'recn' => ''), TRUE);
 
             $this->render('pages/list_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
+
     }
 
     function crud_edit_action($primary_key, $row) {
         return site_url('specimen/permit/edit') . '/' . $primary_key;
+
     }
 
     function crud_view_action($primary_key, $row) {
         return site_url('specimen/permit/read') . '/' . $primary_key;
+
     }
 
     function delete_callback($primary_key) {
 
         return $this->M_specimenpermit->del_specimenpermit($primary_key);
+
     }
 
     function dateIssued_callback($value, $row) {
         $dt = new DateTime($value);
         return $dt->format('d/M/Y');
+
     }
 
     function fee_callback($value, $row) {
 
         return '$' . \round($value * 100) / 100;
+
     }
 
     function weight_callback($value, $row) {
 
         return (\round($value * 100) / 100) . 'Kg';
+
     }
 
     /////////////////////////////////////////////////////
     ///////ADD Specimen_Permit //////////////////////////////////// 
     function specimen_permit_add_edit() {
-        if ($this->session->userdata('autenticado')) {
+//        if ($this->session->userdata('autenticado')) {
             $datos = array();
             $this->form_validation->set_rules('specimen_name', 'specimen_name', 'required');
             $this->form_validation->set_rules('specimen_sender', 'specimen_sender', 'required');
@@ -123,39 +136,44 @@ class Specimen_Permit extends My_Controller {
             if ($this->form_validation->run() == FALSE) {
                 $estado = array("state" => "All data are required", 'success' => FALSE);
                 print_r(json_encode($estado));
-            } else {
+            }
+            else {
                 date('F j, Y \a\t g:i A', strtotime($this->input->post('date_issued_specimen')));
 
                 $datos_specimen = array(
-                    'd_recn' => $this->input->post('specimen_recn'),
-                    'd_name' => $this->input->post('specimen_name'),
-                    'd_sender' => $this->input->post('specimen_sender'),
-                    'd_reciever' => $this->input->post('specimen_reciever'),
-                    'd_destination' => $this->input->post('sele_specimen_destination'),
-                    'd_weight' => $this->input->post('specimen_weight'),
-                    'd_dateIssued' => date('Y-m-d', strtotime($this->input->post('date_issued_specimen'))),
-                    'd_fee' => $this->input->post('specimen_fee')
+                  'd_recn' => $this->input->post('specimen_recn'),
+                  'd_name' => $this->input->post('specimen_name'),
+                  'd_sender' => $this->input->post('specimen_sender'),
+                  'd_reciever' => $this->input->post('specimen_reciever'),
+                  'd_destination' => $this->input->post('sele_specimen_destination'),
+                  'd_weight' => $this->input->post('specimen_weight'),
+                  'd_dateIssued' => date('Y-m-d', strtotime($this->input->post('date_issued_specimen'))),
+                  'd_fee' => $this->input->post('specimen_fee')
                 );
                 /// IDENTIFICAR PARA HACER UN EDIT O UN ADD
                 $specimen_recn = -1;
                 if ($this->input->post('edit') === '0') {
                     $specimen_recn = $this->M_specimenpermit->set_specimenpermit($datos_specimen);
-                } else {
+                }
+                else {
                     $specimen_recn = $this->M_specimenpermit->update_specimenpermit($datos_specimen);
                 }
 
                 if ($specimen_recn > 0) {
-                    $estado = array("state" => "Your data has been successfully stored into the database.", "id" => $specimen_recn, 'success' => TRUE);
-                } else {
-                    $estado = array("state" => "The data you had insert may not be saved.", "id" => $specimen_recn, 'success' => FALSE);
+                    $estado = array("state" => "Your specimen has been successfully stored into the database.", "id" => $specimen_recn, 'success' => TRUE);
+                }
+                else {
+                    $estado = array("state" => "The specimen you had insert may not be saved.", "id" => $specimen_recn, 'success' => FALSE);
                 }
 
                 print_r(json_encode($estado));
             }
-        } else {
-            $estado = array("success" => FALSE, "state" => "Access denied!!!");
-            print_r(json_encode($estado));
-        }
+//        }
+//        else {
+//            $estado = array("success" => FALSE, "state" => "Access denied!!!");
+//            print_r(json_encode($estado));
+//        }
+
     }
 
     //////////////////////////////////////////////
@@ -166,10 +184,12 @@ class Specimen_Permit extends My_Controller {
 
         $recn_specimen_delete = $this->M_specimenpermit->del_specimenpermit($specimen_recn);
         if ($recn_specimen_delete > 0) {
-            print_r(json_encode(array("status" => TRUE, "state" => 'Your data has been successfully deleted from the database.')));
-        } else {
-            print_r(json_encode(array("status" => FALSE, "state" => 'Your data has not been deleted from the database.')));
+            print_r(json_encode(array("status" => TRUE, "state" => 'Your specimen has been successfully deleted from the database.')));
         }
+        else {
+            print_r(json_encode(array("status" => FALSE, "state" => 'Your specimen has not been deleted from the database.')));
+        }
+
     }
 
     ////////////////////////////////////////////////
@@ -181,7 +201,8 @@ class Specimen_Permit extends My_Controller {
 
         if ($page + 1 > count($all_specimen) || $page <= 0) {
             $page = 1;
-        } else {
+        }
+        else {
             $page = $page + 1;
         }
         $registers_specimen = $this->M_specimenpermit->get_specimenpermit_pagination($page - 1);
@@ -192,6 +213,7 @@ class Specimen_Permit extends My_Controller {
         $specimen_permits['page'] = $page;
 
         print_r(json_encode($specimen_permits));
+
     }
 
 ///////////////////////////////////// 
@@ -206,7 +228,8 @@ class Specimen_Permit extends My_Controller {
         if ($page - 1 <= 0 || $page > count($all_specimen)) {
 
             $page = count($all_specimen);
-        } else {
+        }
+        else {
             $page = $page - 1;
         }
 
@@ -219,6 +242,7 @@ class Specimen_Permit extends My_Controller {
         $specimen_permits['page'] = $page;
 
         print_r(json_encode($specimen_permits));
+
     }
 
 ////////////////////////////////////////////////////////////////
@@ -226,6 +250,7 @@ class Specimen_Permit extends My_Controller {
     function get_Specimen_Permit_data($specimen) {
 
         return array('specimen' => $specimen);
+
     }
 
 /////////////////////////////////////////////////
@@ -234,18 +259,19 @@ class Specimen_Permit extends My_Controller {
 
         $name = $this->input->post('name');
         $datos_specimen = array('d_name' => $name,
-            'd_sender' => $name,
-            'd_reciever' => $name,
-            'd_destination' => $name,
-            'd_weight' => $name,
-            'd_fee' => $name,
-            'd_dateIssued' => $name);
+          'd_sender' => $name,
+          'd_reciever' => $name,
+          'd_destination' => $name,
+          'd_weight' => $name,
+          'd_fee' => $name,
+          'd_dateIssued' => $name);
 
 
         $result = $this->M_specimenpermit->find_specimenpermit($datos_specimen);
         $specimen_permits = $this->get_Specimen_Permit_data($result);
 
         print_r(json_encode($specimen_permits));
+
     }
 
 /////////////////////////////////////////////////
@@ -258,6 +284,7 @@ class Specimen_Permit extends My_Controller {
         $specimen_permits = $this->get_Specimen_Permit_data($result);
 
         print_r(json_encode($specimen_permits));
+
     }
 
 ////////////////////////////////////////////////////////////////
@@ -266,6 +293,7 @@ class Specimen_Permit extends My_Controller {
 
         $result = $this->M_tblcountries->get_Countries_by_type(2);
         print_r(json_encode($result));
+
     }
 
 }

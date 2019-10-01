@@ -11,20 +11,24 @@ class Animalimp extends My_Controller {
 
         parent::__construct();
 
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        } else {
+//
+//            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
+//        }
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tbltraders', 'M_tradeliveanimals', 'M_tradeliveanimalsdetails'));
+        
+        
+        //new authentication method
+        $this->auth->route_access();
     }
 
     function index($action, $recn = NULL) {
-        $data['title'] = 'Import of Live Animals';
+        $data['title'] = 'Live Animals Licence (Imp)';
         $data['pag'] = 'animimp';
         $data['parish'] = $this->M_tbldistricts->get_all_Districts();
         $data['country'] = $this->M_tblcountries->get_all_Countries();
@@ -41,7 +45,7 @@ class Animalimp extends My_Controller {
 
         $data = array();
         try {
-            $data['title'] = 'Import of Live Animals List';
+            $data['title'] = 'Live Animals Licences (Imp) List';
             $data['pag'] = '';
 
             $crud = new grocery_CRUD();
@@ -49,7 +53,7 @@ class Animalimp extends My_Controller {
 
             $crud->set_theme('datatables');
             $crud->set_table('tbltradeliveanimals');
-            $crud->set_subject('Import of Live Animals');
+            $crud->set_subject('Licence (Imp)');
             $crud->unset_clone();
             $crud->unset_edit();
             $crud->unset_read();
@@ -237,10 +241,10 @@ class Animalimp extends My_Controller {
             }
             //$id_tradeproductsrecn = 1;
             if ($id_tradeliveanimalrecn > 0) {
-                $estado = array("status" => TRUE, "state" => "Your data has been successfully stored into the database.", 'success' => TRUE, 'id' => $id_tradeliveanimalrecn);
+                $estado = array("status" => TRUE, "state" => "Your licence has been successfully stored into the database.", 'success' => TRUE, 'id' => $id_tradeliveanimalrecn);
                 /* $estado = array("state" => "Your data has been successfully stored into the database.","idtradeproductsrecn" => $id_tradeproductsrecnrecn,"idfarm"=>$id_farm ); */
             } else {
-                $estado = array("status" => FALSE, "state" => "The data you had insert may not be saved.", 'success' => FALSE, 'id' => $id_tradeliveanimalrecn);
+                $estado = array("status" => FALSE, "state" => "The licence you had insert may not be saved.", 'success' => FALSE, 'id' => $id_tradeliveanimalrecn);
             }
             print_r(json_encode($estado));
         }

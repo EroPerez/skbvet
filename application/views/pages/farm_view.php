@@ -79,7 +79,7 @@
                                                 <label class="field select">
                                                     <select id="farm_parish" name="farm_parish" placeholder="Parish">
                                                         <?php foreach ($parish as $key_parish => $value_parish) { ?>
-                                                          <option value="<?php echo $value_parish['recn']; ?>"><?php echo $value_parish['name']; ?></option>
+                                                            <option value="<?php echo $value_parish['recn']; ?>"><?php echo $value_parish['name']; ?></option>
                                                         <?php } ?>
                                                     </select><i class="arrow"></i>
                                                 </label>
@@ -97,7 +97,7 @@
                                                         <label class="field select">
                                                             <select id="farm_sizeunit" name="farm_sizeunit" placeholder="Units">
                                                                 <?php foreach ($sizeunits as $key_unit => $value_unit) { ?>
-                                                                  <option value="<?php echo $value_unit['recn']; ?>"><?php echo $value_unit['name']; ?></option>
+                                                                    <option value="<?php echo $value_unit['recn']; ?>"><?php echo $value_unit['name']; ?></option>
                                                                 <?php } ?>
 
                                                             </select><i class="arrow"></i>
@@ -292,7 +292,7 @@
                             <label class="field select" >
                                 <select id="livestock_species" name="livestock_species" placeholder="Species">
                                     <?php foreach ($species as $key_unit => $value_species) { ?>
-                                      <option value="<?php echo $value_species['recn']; ?>"><?php echo $value_species['name']; ?></option>
+                                        <option value="<?php echo $value_species['recn']; ?>"><?php echo $value_species['name']; ?></option>
                                     <?php } ?>
                                 </select><i class="arrow"></i>
                             </label>
@@ -360,7 +360,7 @@
                             <label class="field select" >
                                 <select id="livestock_contry" name="livestock_contry" placeholder="Contry"  disabled="true" >
                                     <?php foreach ($contry as $key_count => $value_cout) { ?>
-                                      <option data-type-contry="<?php echo $value_cout['type']; ?>" value="<?php echo $value_cout['recn']; ?>"><?php echo $value_cout['name']; ?></option>
+                                        <option data-type-contry="<?php echo $value_cout['type']; ?>" value="<?php echo $value_cout['recn']; ?>"><?php echo $value_cout['name']; ?></option>
                                     <?php } ?>
                                 </select><i class="arrow"></i>
                             </label>
@@ -383,7 +383,7 @@
                                 <label class="field select">
                                     <select id="livestock_Quarantine_unit" name="livestock_Quarantine_unit" placeholder="units" disabled="true">
                                         <?php foreach ($sizeunits2 as $key_unit => $value_unit) { ?>
-                                          <option value="<?php echo $value_unit['recn']; ?>"><?php echo $value_unit['name']; ?></option>
+                                            <option value="<?php echo $value_unit['recn']; ?>"><?php echo $value_unit['name']; ?></option>
                                         <?php } ?>
 
                                     </select><i class="arrow"></i>

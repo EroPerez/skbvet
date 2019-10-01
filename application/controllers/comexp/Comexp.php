@@ -10,21 +10,25 @@ class Comexp extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        } else {
+//
+//            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
+//        }
 
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_tbltraders', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_tradeproducts', 'M_tradeproductsdetails', 'M_tblcommodities'));
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index($action, $recn = NULL) {
-        $data['title'] = 'Licences (exp)';
+        $data['title'] = 'Commodity Licence (Exp)';
         $data['trader'] = $this->M_tbltraders->get_Traders_by_type(2);
         $data['sizeunits'] = $this->M_tblunits->get_all_Units();
         $data['parish'] = $this->M_tbldistricts->get_all_Districts();
@@ -35,13 +39,14 @@ class Comexp extends My_Controller {
         $operation = array('action' => $action, 'recn' => $recn);
         $this->data_template['script'] = $this->load->view('pages/s_comexp', $operation, TRUE);
         $this->render('pages/comexp_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function Comexp_list() {
 
         $data = array();
         try {
-            $data['title'] = 'Licences (Exp) List';
+            $data['title'] = 'Commodities Licences (Exp) List';
             $data['pag'] = '';
 
             $crud = new grocery_CRUD();
@@ -49,7 +54,7 @@ class Comexp extends My_Controller {
 
             $crud->set_theme('datatables');
             $crud->set_table('tbltradeproducts');
-            $crud->set_subject('Licences (exp)');
+            $crud->set_subject('Licence (Exp)');
             $crud->unset_clone();
             $crud->unset_edit();
             $crud->unset_read();
@@ -58,10 +63,10 @@ class Comexp extends My_Controller {
             $crud->set_relation('FarmRecn', 'tbltraders', 'name');
             $crud->columns('tradeType', 'licenceNo', 'dateOfLicence', 'FarmRecn', 'fee');
             $crud->display_as('licenceNo', 'Licence No')
-                    ->display_as('dateOfLicence', 'Date Of Licence')
-                    ->display_as('FarmRecn', 'Trader')
-                    ->display_as('tradeType', 'Type')
-                    ->order_by('recn', 'desc');
+              ->display_as('dateOfLicence', 'Date Of Licence')
+              ->display_as('FarmRecn', 'Trader')
+              ->display_as('tradeType', 'Type')
+              ->order_by('recn', 'desc');
             $crud->callback_column('dateOfLicence', array($this, 'dateOfLicence_callback'));
             $crud->callback_column('fee', array($this, 'fee_callback'));
             $crud->callback_column('tradeType', array($this, 'tradeType_callback'));
@@ -78,36 +83,44 @@ class Comexp extends My_Controller {
             $this->data_template['script'] = $this->load->view('pages/s_comimp', array('action' => '', 'recn' => ''), TRUE);
 
             $this->render('pages/list_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
+
     }
 
     function crud_edit_action($primary_key, $row) {
         return site_url('comexp/licence/edit') . '/' . $row->recn;
+
     }
 
     function crud_view_action($primary_key, $row) {
         return site_url('comexp/licence/read') . '/' . $row->recn;
+
     }
 
     function delete_callback($primary_key) {
         $this->M_tradeproductsdetails->del_tradeproductsdetails_by($primary_key);
         return $this->M_tradeproducts->del_tradeproducts($primary_key);
+
     }
 
     function dateOfLicence_callback($value, $row) {
         $dt = new DateTime($value);
         return $dt->format('d/M/Y');
+
     }
 
     function fee_callback($value, $row) {
 
         return '$' . \round($value * 100) / 100;
+
     }
 
     function tradeType_callback($value, $row) {
         return 'Exp';
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -144,7 +157,8 @@ class Comexp extends My_Controller {
         if ($page - 1 <= 0 || $page > count($all_tradeproducts)) {
 
             $page = count($all_tradeproducts);
-        } else {
+        }
+        else {
             $page = $page - 1;
         }
         $registers_tradeproducts = $this->M_tradeproducts->get_tradeproducts_pagination($page - 1, $a);
@@ -153,6 +167,7 @@ class Comexp extends My_Controller {
 
         $tradeproducts_and_details['page'] = $page;
         print_r(json_encode($tradeproducts_and_details));
+
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +200,8 @@ class Comexp extends My_Controller {
 
         if ($page + 1 > count($all_tradeproducts) || $page <= 0) {
             $page = 1;
-        } else {
+        }
+        else {
             $page = $page + 1;
         }
         $registers_tradeproducts = $this->M_tradeproducts->get_tradeproducts_pagination($page - 1, $a);
@@ -194,6 +210,7 @@ class Comexp extends My_Controller {
 
         $tradeproducts_and_details['page'] = $page;
         print_r(json_encode($tradeproducts_and_details));
+
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,16 +227,17 @@ class Comexp extends My_Controller {
         if ($this->form_validation->run() == FALSE) {
             $estado = array("state" => "All data are requered", 'success' => FALSE);
             print_r(json_encode($estado));
-        } else {
+        }
+        else {
             date('F j, Y \a\t g:i A', strtotime($this->input->post('comimp_date')));
 
             $datostradeproducts = array(
-                'd_recn' => $this->input->post('comimp_recn'),
-                'd_dateOfLicence' => date('Y-m-d', strtotime($this->input->post('comimp_date'))),
-                'd_licenceNo' => $this->input->post('comimp_licenceNo'),
-                'd_FarmRecn' => $this->input->post('comimp_trader'),
-                'd_fee' => $this->input->post('comimp_fee'),
-                'd_tradeType' => 2,
+              'd_recn' => $this->input->post('comimp_recn'),
+              'd_dateOfLicence' => date('Y-m-d', strtotime($this->input->post('comimp_date'))),
+              'd_licenceNo' => $this->input->post('comimp_licenceNo'),
+              'd_FarmRecn' => $this->input->post('comimp_trader'),
+              'd_fee' => $this->input->post('comimp_fee'),
+              'd_tradeType' => 2,
             );
             /// IDENTIFICAR PARA HACER UN EDIT O UN ADD/////
             $id_tradeproductsrecn = -1;
@@ -230,11 +248,13 @@ class Comexp extends My_Controller {
             }
             if ($id_tradeproductsrecn > 0) {
                 $estado = array("state" => "Your data has been successfully stored into the database.", 'success' => TRUE, "recn" => $id_tradeproductsrecn);
-            } else {
+            }
+            else {
                 $estado = array(array("state" => "The data you had insert may not be saved.", 'success' => FALSE));
             }
             print_r(json_encode($estado));
         }
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -252,6 +272,7 @@ class Comexp extends My_Controller {
             print_r(json_encode(array("state" => 'Your data has been successfully deleted from the database.', 'success' => TRUE)));
         else
             print_r(json_encode(array('state' => 'Your data was not deleted from the database.', 'success' => FALSE)));
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -273,10 +294,12 @@ class Comexp extends My_Controller {
         $res = FALSE;
         if ($this->input->post('edit') == 0) {
             $res = $this->M_tradeproductsdetails->set_tradeproductsdetails($data);
-        } else
+        }
+        else
             $res = $this->M_tradeproductsdetails->update_tradeproductsdetails($data);
 
         echo $res;
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -287,6 +310,7 @@ class Comexp extends My_Controller {
         $id = $this->input->post('recnlive');
         $res = $this->M_tradeproductsdetails->get_a_tradeproductsdetails($id);
         print_r(json_encode($res));
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -297,10 +321,11 @@ class Comexp extends My_Controller {
         $id = $this->input->post('recnlive');
         $res = $this->M_tradeproductsdetails->del_tradeproductsdetails($id);
         $r = array(
-            'message' => 'The trade products details has been successfully deleted from the database.',
-            'resp' => $res,
+          'message' => 'The trade products details has been successfully deleted from the database.',
+          'resp' => $res,
         );
         print_r(json_encode($r));
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -312,6 +337,7 @@ class Comexp extends My_Controller {
         $tradeproducts = $this->M_tradeproductsdetails->get_tradeproductsdetails_by_tradeproducts($id_tradeproducts);
 
         print_r(json_encode($tradeproducts));
+
     }
 
     function get_tradeproducts_data($tradeproducts) {
@@ -321,20 +347,22 @@ class Comexp extends My_Controller {
 
 
         return $result;
+
     }
 
     function search() {
         $name = $this->input->post('name');
         $datostradeproducts = array(
-            'd_licenceNo' => $name,
-            'd_fee' => $name,
-            'd_tradeType' => 2,
+          'd_licenceNo' => $name,
+          'd_fee' => $name,
+          'd_tradeType' => 2,
         );
 
         $registers_tradeproducts = $this->M_tradeproducts->find_tradeproducts($datostradeproducts);
         $tradeproducts_and_details = $this->get_tradeproducts_data($registers_tradeproducts);
 
         print_r(json_encode($tradeproducts_and_details));
+
     }
 
     function licence_get_by_id() {
@@ -345,6 +373,7 @@ class Comexp extends My_Controller {
         $tradeproducts_and_details = $this->get_tradeproducts_data($registers_tradeproducts);
 
         print_r(json_encode($tradeproducts_and_details));
+
     }
 
 }

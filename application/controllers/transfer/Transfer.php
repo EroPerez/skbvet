@@ -10,14 +10,15 @@ class Transfer extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        }
 
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers', 'M_surveillance', 'M_surveillancedetails'));
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index($action, $recn = NULL) {
@@ -26,10 +27,11 @@ class Transfer extends My_Controller {
         $data['species'] = $this->M_tblspecies->get_all_Species();
         $data['farm'] = $this->M_farms->get_farms();
         $data['pag'] = 'transfer';
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
+//        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
         $operation = array('action' => $action, 'recn' => $recn);
         $this->data_template['script'] = $this->load->view('pages/s_transfer', $operation, TRUE);
         $this->render('pages/transfer_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function transfer_list() {
@@ -42,23 +44,23 @@ class Transfer extends My_Controller {
             $crud = new grocery_CRUD();
 
             $crud->set_theme('datatables')
-                    ->set_table('tbltransfers')
-                    ->set_subject('Transfer')
-                    ->unset_clone()
-                    ->unset_edit()
-                    ->unset_read()
-                    ->unset_print()
-                    ->unset_delete()
-                    ->unset_jquery()
-                    ->set_relation('FromFarmRecn', 'tblfarms', 'farmName')
-                    ->set_relation('ToFarmRecn', 'tblfarms', 'farmName')
-                    ->set_relation('LivestockRecn', 'tbllivestock', 'IDNO')
-                    ->display_as('LivestockRecn', 'Livestock ID')
-                    ->display_as('FromFarmRecn', 'From Farm')
-                    ->display_as('ToFarmRecn', 'To Farm')
-                    ->display_as('TransferDate', 'Transfer Date')
-                    ->callback_column('TransferDate', array($this, 'TransferDate_callback'))
-                    ->order_by('recn', 'desc');
+              ->set_table('tbltransfers')
+              ->set_subject('Transfer')
+              ->unset_clone()
+              ->unset_edit()
+              ->unset_read()
+              ->unset_print()
+              ->unset_delete()
+              ->unset_jquery()
+              ->set_relation('FromFarmRecn', 'tblfarms', 'farmName')
+              ->set_relation('ToFarmRecn', 'tblfarms', 'farmName')
+              ->set_relation('LivestockRecn', 'tbllivestock', 'IDNO')
+              ->display_as('LivestockRecn', 'Livestock ID')
+              ->display_as('FromFarmRecn', 'From Farm')
+              ->display_as('ToFarmRecn', 'To Farm')
+              ->display_as('TransferDate', 'Transfer Date')
+              ->callback_column('TransferDate', array($this, 'TransferDate_callback'))
+              ->order_by('recn', 'desc');
 
 
             $obj = $crud->render();
@@ -69,20 +71,24 @@ class Transfer extends My_Controller {
             $this->data_template['script'] = $this->load->view('pages/s_transfer_list', NULL, TRUE);
 
             $this->render('pages/list_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
+
     }
 
     function TransferDate_callback($value, $row) {
         $dt = new DateTime($value);
         return $dt->format('d/M/Y');
+
     }
 
     function livestock_by_farm() {
         $idfarm = $this->input->post('recn');
         $res = $this->M_livestock->get_a_Livestock_by_farm($idfarm);
         print_r(json_encode($res));
+
     }
 
     function save_transf() {
@@ -94,9 +100,10 @@ class Transfer extends My_Controller {
 //        print_r($livestockRecns);
 
         if (empty($livestockRecns) || empty($fromFarm) || empty($toFarm) || empty($transferDate)) {
-            $estado = array("state" => "All data are required to successfuly complete a Tranfer Sale.", 'success' => FALSE);
+            $estado = array("state" => "All data are required to successfully complete a Tranfer Sale.", 'success' => FALSE);
             print_r(json_encode($estado));
-        } else {
+        }
+        else {
             foreach ($livestockRecns as $livestockRecn) {
                 $tranfer_data = array();
                 $tranfer_data['d_LivestockRecn'] = $livestockRecn;
@@ -129,17 +136,18 @@ class Transfer extends My_Controller {
 
                         $surv = $this->M_surveillance->get_a_surveillance($survdetail['surveillanceRecn']);
                         $surv_data = array(
-                            'farmRecn' => $toFarm,
-                            'testRecn' => $surv[0]['testRecn'],
-                            'dateOfSurveillance' => $surv[0]['dateOfSurveillance'],
-                            'recn' => $surv[0]['recn']
+                          'farmRecn' => $toFarm,
+                          'testRecn' => $surv[0]['testRecn'],
+                          'dateOfSurveillance' => $surv[0]['dateOfSurveillance'],
+                          'recn' => $surv[0]['recn']
                         );
                         $this->M_surveillance->update_surveillance($surv_data);
                     }
                 }
             }
-            print_r(json_encode(array('state' => 'Your data has been successfully updated.', 'success' => TRUE)));
+            print_r(json_encode(array('state' => 'Your Transfer has been successfully saved.', 'success' => TRUE)));
         }
+
     }
 
 }

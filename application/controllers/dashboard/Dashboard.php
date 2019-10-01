@@ -10,17 +10,16 @@ class Dashboard extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
 
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
-        $this->load->model(array('M_Dashboard', 'M_farmers', 'M_livestock', 'M_farms', 'M_tblunits', 'M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers'));
+        $this->load->model(array('M_Dashboard', 'M_tbldistricts'));
+
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index() {
@@ -30,17 +29,10 @@ class Dashboard extends My_Controller {
         $data['parish'] = $this->M_tbldistricts->get_all_Districts();
         $data['mapItems'] = $this->fillMapItems($this->M_Dashboard->getMapData());
         $data['pag'] = 'Dashboard';
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
         $this->data_template['script'] = $this->load->view('pages/s_dashboard', NULL, TRUE);
 
-
-        if (!$this->use_acc['allow_intro_edit']['farm_farmers']) {
-            $this->data_template['farm_hab'] = 'disabled';
-        } else {
-            $this->data_template['farm_hab'] = '';
-        }
-
         $this->render('pages/dashboard_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function fillMapItems($mapItems) {
@@ -372,38 +364,42 @@ class Dashboard extends My_Controller {
         }
         $itemsStr .= ']';
         return $itemsStr;
+
     }
 
     function animalByDistricts() {
         echo json_encode($this->M_Dashboard->getAnimalByDistricts());
+
     }
 
     function caseByDistricts() {
         echo json_encode($this->M_Dashboard->getCaseByDistricts());
+
     }
 
     function farmByDistricts() {
         echo json_encode($this->M_Dashboard->getFarmByDistricts());
+
     }
 
     function totalAnimalTestedByFarm() {
         echo json_encode($this->M_Dashboard->getTotalAnimalTestedByFarm());
+
     }
 
     function numberOfAnimalImportedBySpecies() {
         echo json_encode($this->M_Dashboard->getNumberOfAnimalImportedBySpecies());
+
     }
 
     function totaloMeatImportedByCommodity() {
         echo json_encode($this->M_Dashboard->getTotaloMeatImportedByCommodity());
+
     }
 
     function numberSpecimenPermitIssuedByYear() {
         echo json_encode($this->M_Dashboard->getNumberSpecimenPermitIssuedByYear());
+
     }
 
 }
-
-/*
- * [      ]
- *  */

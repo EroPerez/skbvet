@@ -10,16 +10,21 @@ class Illness extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        }
 
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_farmers', 'M_tblveterinarians', 'M_tblillnessnames', 'M_casedetails', 'M_caseillnesses', 'M_livestock', 'M_farms', 'M_tblcountries', 'M_transfers', 'M_tbltreatmentnames', 'M_bills'));
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
-        $accesos = $this->data_template['accesos']['case_management']['allow_intro_edit'];
+//        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
+//        $accesos = $this->data_template['accesos']['case_management']['allow_intro_edit'];
+//        
+//        
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index($action, $recn = NULL) {
@@ -33,11 +38,12 @@ class Illness extends My_Controller {
         $data['pag'] = 'illness';
         $data['illness_n'] = $this->M_tblillnessnames->get_all_Illnessname();
         $data['treatname'] = $this->M_tbltreatmentnames->get_all_TreatmentNames();
-        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
+//        $this->data_template['accesos'] = $this->session->userdata('conf_acc');
 
         $operation = array('action' => $action, 'recn' => $recn);
         $this->data_template['script'] = $this->load->view('pages/s_illness', $operation, TRUE);
         $this->render('pages/illness_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function case_list() {
@@ -62,13 +68,13 @@ class Illness extends My_Controller {
             $crud->set_relation('vetRecn', 'tblveterinarians', 'name', NULL, 'recn ASC');
             $crud->columns('caseNumber', 'dateOfCase', 'farmRecn', 'livestockRecn', 'vetRecn', 'billTotal');
             $crud->display_as('caseNumber', 'Case Number')
-                    ->display_as('dateOfCase', 'Date Of Case')
-                    ->display_as('farmRecn', 'Farm')
-                    ->display_as('livestockRecn', 'Livestock ID')
-                    ->display_as('vetRecn', 'Veterinarian')
-                    ->display_as('billTotal', 'Bill Total')
-                    ->order_by('recn', 'desc');
-            
+              ->display_as('dateOfCase', 'Date Of Case')
+              ->display_as('farmRecn', 'Farm')
+              ->display_as('livestockRecn', 'Livestock ID')
+              ->display_as('vetRecn', 'Veterinarian')
+              ->display_as('billTotal', 'Bill Total')
+              ->order_by('recn', 'desc');
+
             $crud->callback_column('dateOfCase', array($this, 'dateOfCase_callback'));
             $crud->callback_column('billTotal', array($this, 'billTotal_callback'));
 
@@ -84,33 +90,40 @@ class Illness extends My_Controller {
             $this->data_template['script'] = $this->load->view('pages/s_illness', array('action' => '', 'recn' => ''), TRUE);
 
             $this->render('pages/list_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
+
     }
 
     function crud_edit_action($primary_key, $row) {
         return site_url('illness/case/edit') . '/' . $row->recn;
+
     }
 
     function crud_view_action($primary_key, $row) {
         return site_url('illness/case/read') . '/' . $row->recn;
+
     }
 
     function delete_case_callback($primary_key) {
 //        $caseDetails = $this->M_casedetails->get_a_casedetails($primary_key);
         $this->M_caseillnesses->del_caseillnesses_by($primary_key);
         return $this->M_casedetails->del_casedetails($primary_key);
+
     }
 
     function dateOfCase_callback($value, $row) {
         $dt = new DateTime($value);
         return $dt->format('d/M/Y');
+
     }
 
     function billTotal_callback($value, $row) {
 
         return '$' . \round($value * 100) / 100;
+
     }
 
     function case_forward() {
@@ -121,7 +134,8 @@ class Illness extends My_Controller {
 
         if ($page + 1 > count($all_case) || $page <= 0) {
             $page = 1;
-        } else {
+        }
+        else {
             $page = $page + 1;
         }
         $registers_case = $this->M_casedetails->get_casedetails_pagination($page - 1);
@@ -133,6 +147,7 @@ class Illness extends My_Controller {
         $results['page'] = $page;
 
         print_r(json_encode($results));
+
     }
 
 ///////////////////////////////////// 
@@ -147,7 +162,8 @@ class Illness extends My_Controller {
         if ($page - 1 <= 0 || $page > count($all_case)) {
 
             $page = count($all_case);
-        } else {
+        }
+        else {
             $page = $page - 1;
         }
 
@@ -157,6 +173,7 @@ class Illness extends My_Controller {
 
         $specimen_permits['page'] = $page;
         print_r(json_encode($specimen_permits));
+
     }
 
 ////////////////////////////////////////////////////////////////
@@ -176,6 +193,7 @@ class Illness extends My_Controller {
         $result = array('caseillness' => $registers_case, 'illness' => array(), 'livestock' => $regiter_livestock, 'farm' => $registers_farm, 'veterinarian' => $veterinary);
 
         return $result;
+
     }
 
     function listar_illness() {
@@ -184,6 +202,7 @@ class Illness extends My_Controller {
         $illness = $this->M_caseillnesses->get_illness_by_case($idcase);
 
         print_r(json_encode($illness));
+
     }
 
     function edit_illness() {
@@ -192,6 +211,7 @@ class Illness extends My_Controller {
         $res = $this->M_caseillnesses->get_a_caseillnesses($id);
 
         print_r(json_encode($res));
+
     }
 
     function add_illness() {
@@ -208,10 +228,12 @@ class Illness extends My_Controller {
         $res = FALSE;
         if ($this->input->post('addillness') === 'true') {
             $res = $this->M_caseillnesses->set_caseillnesses($data);
-        } else
+        }
+        else
             $res = $this->M_caseillnesses->update_caseillnesses($data);
 
         echo $res;
+
     }
 
     function delete_illness() {
@@ -219,6 +241,7 @@ class Illness extends My_Controller {
         $idlive = $this->input->post('reclive');
         $res = $this->M_caseillnesses->del_caseillnesses($idlive);
         echo $res;
+
     }
 
     function farm() {
@@ -232,6 +255,7 @@ class Illness extends My_Controller {
         }
 
         print_r($html_f);
+
     }
 
     function livestock_for_farm() {
@@ -244,6 +268,7 @@ class Illness extends My_Controller {
         }
 
         print_r($html_l);
+
     }
 
     function veterinary() {
@@ -253,50 +278,55 @@ class Illness extends My_Controller {
             $html_v .= "<option value='" . $value['recn'] . "'>" . $value['name'] . "</option>";
         }
         print_r($html_v);
+
     }
 
     function case_add_edit() {
-        if ($this->session->userdata('autenticado')) {
-            $datos = array();
-            $this->form_validation->set_rules('case_datepicker6', 'case_datepicker6', 'required');
-            $this->form_validation->set_rules('case_CaseNo', 'case_CaseNo', 'required');
-            $this->form_validation->set_rules('case_farm', 'case_farm', 'required');
-            //  $this->form_validation->set_rules('case_livestockid', 'case_livestockid', 'required');
-            $this->form_validation->set_rules('case_veterinarian', 'case_veterinarian', 'required');
+//        if ($this->session->userdata('autenticado')) {
+        $datos = array();
+        $this->form_validation->set_rules('case_datepicker6', 'case_datepicker6', 'required');
+        $this->form_validation->set_rules('case_CaseNo', 'case_CaseNo', 'required');
+        $this->form_validation->set_rules('case_farm', 'case_farm', 'required');
+        //  $this->form_validation->set_rules('case_livestockid', 'case_livestockid', 'required');
+        $this->form_validation->set_rules('case_veterinarian', 'case_veterinarian', 'required');
 
-            if ($this->form_validation->run() == FALSE) {
-               $estado = array("state" => "All data are required", 'success' => FALSE);
-                print_r(json_encode($estado));
-            } else {
-                date('F j, Y \a\t g:i A', strtotime($this->input->post('case_datepicker6')));
-
-                $datoscase = array(
-                    'd_recn' => $this->input->post('reccase'),
-                    'd_dateOfCase' => date('Y-m-d', strtotime($this->input->post('case_datepicker6'))),
-                    'd_caseNumber' => $this->input->post('case_CaseNo'),
-                    'd_farmRecn' => $this->input->post('case_farm'),
-                    'd_livestockRecn' => $this->input->post('case_livestockid'),
-                    'd_vetRecn' => $this->input->post('case_veterinarian'),
-                    'd_billTotal' => $this->input->post('billTotal')
-                        //'d_bill_total' => 0
-                        //$mobile_home = $this->input->post('farmer_mobile_home')
-                );
-                /// IDENTIFICAR PARA HACER UN EDIT O UN ADD/////
-                if ($this->input->post('edit') === '0') {
-                    $datoscase['d_billTotal'] = 0;
-                    $id_caseRecn = $this->M_casedetails->set_casedetails($datoscase);
-                    $estado = array("state" => "Your data has been successfully stored into the database.", "recn" => $id_caseRecn, 'success' => TRUE);
-                    print_r(json_encode($estado));
-                } else {
-                    $id_caseRecn = $this->M_casedetails->update_casedetails($datoscase);
-                    $estado = array("state" => "The case has been successfully updated into the database.", "recn" => $id_caseRecn, 'success' => TRUE);
-                    print_r(json_encode($estado));
-                }
-            }
-        } else {
-            $estado = array("state" => "Unable to add or edit case.", 'success' => FALSE);
+        if ($this->form_validation->run() == FALSE) {
+            $estado = array("state" => "All case data are required.", 'success' => FALSE);
             print_r(json_encode($estado));
         }
+        else {
+            date('F j, Y \a\t g:i A', strtotime($this->input->post('case_datepicker6')));
+
+            $datoscase = array(
+              'd_recn' => $this->input->post('reccase'),
+              'd_dateOfCase' => date('Y-m-d', strtotime($this->input->post('case_datepicker6'))),
+              'd_caseNumber' => $this->input->post('case_CaseNo'),
+              'd_farmRecn' => $this->input->post('case_farm'),
+              'd_livestockRecn' => $this->input->post('case_livestockid'),
+              'd_vetRecn' => $this->input->post('case_veterinarian'),
+              'd_billTotal' => $this->input->post('billTotal')
+              //'d_bill_total' => 0
+              //$mobile_home = $this->input->post('farmer_mobile_home')
+            );
+            /// IDENTIFICAR PARA HACER UN EDIT O UN ADD/////
+            if ($this->input->post('edit') === '0') {
+                $datoscase['d_billTotal'] = 0;
+                $id_caseRecn = $this->M_casedetails->set_casedetails($datoscase);
+                $estado = array("state" => "Your case has been successfully stored into the database.", "recn" => $id_caseRecn, 'success' => TRUE);
+                print_r(json_encode($estado));
+            }
+            else {
+                $id_caseRecn = $this->M_casedetails->update_casedetails($datoscase);
+                $estado = array("state" => "The case has been successfully updated into the database.", "recn" => $id_caseRecn, 'success' => TRUE);
+                print_r(json_encode($estado));
+            }
+        }
+//        }
+//        else {
+//            $estado = array("state" => "Unable to add or edit case.", 'success' => FALSE);
+//            print_r(json_encode($estado));
+//        }
+
     }
 
     function delete_case() {
@@ -304,20 +334,20 @@ class Illness extends My_Controller {
         $result_ill = $this->M_caseillnesses->get_illness_by_case($idcase);
         if (count($result_ill) > 0) {
             $r = array(
-                'let' => 'You cannot delete this case, because there are illnesses associated with it',
-                'state' => FALSE
-            );
-            //print_r(json_encode('You cannot delete this case, because there are illnesses associated with it'));
-        } else {
+              'let' => 'You cannot delete this case, because there are illnesses associated.',
+              'state' => FALSE
+            );           
+        }
+        else {
             $this->M_casedetails->del_casedetails($idcase);
             $r = array(
-                'let' => 'The case has been successfully deleted from the database.',
-                'state' => TRUE
-            );
-            //print_r(json_encode($r));
+              'let' => 'The case has been successfully deleted from the database.',
+              'state' => TRUE
+            );          
         }
 
         print_r(json_encode($r));
+
     }
 
     function add_trans() {
@@ -333,7 +363,8 @@ class Illness extends My_Controller {
             if (count($billarray) == 0) { //Para cuando es la primera transaccion
                 $balance = 0;
                 $bill = '0';
-            } else {
+            }
+            else {
                 $balance = $billarray[0]['balance'];
                 $bill = $billarray[0]['transactionDate'];
             }
@@ -342,13 +373,15 @@ class Illness extends My_Controller {
 
                 if ($this->input->post('type_trans') == '1') {
                     $data['d_balance'] = floatval($balance) + floatval($this->input->post('amount_trans'));
-                } else
+                }
+                else
                     $data['d_balance'] = floatval($balance) - floatval($this->input->post('amount_trans'));
 
                 $this->M_bills->set_bills($data);
 
                 print_r(json_encode('Added new transaction'));
-            } else
+            }
+            else
                 print_r(json_encode('Error, new Transaction date must be before last transaction date.'));
         }else {
 
@@ -359,6 +392,7 @@ class Illness extends My_Controller {
 
             print_r(json_encode('Update transaction'));
         }
+
     }
 
     function listar_trans() {
@@ -367,6 +401,7 @@ class Illness extends My_Controller {
         $trans = $this->M_bills->get_bills_by_case($idcase, 'asc');
 
         print_r(json_encode($trans));
+
     }
 
     function delete_trans() {
@@ -376,6 +411,7 @@ class Illness extends My_Controller {
         $res = $this->listar_trans();
 
         echo $res;
+
     }
 
     function validar_fecha_trans($idcase, $fecha_act) {
@@ -389,8 +425,10 @@ class Illness extends My_Controller {
                 return TRUE;
             else
                 return FALSE;
-        } else
+        }
+        else
             return TRUE;
+
     }
 
     function recalculate_bill() {
@@ -419,6 +457,7 @@ class Illness extends My_Controller {
 
 
         print_r(json_encode($v));
+
     }
 
     function case_search() {
@@ -427,6 +466,7 @@ class Illness extends My_Controller {
         $result = $this->M_casedetails->find_casedetails($datos_case);
         //print_r($result);
         print_r(json_encode($this->get_case_data($result)));
+
     }
 
     function case_search_by_livestock() {
@@ -436,6 +476,7 @@ class Illness extends My_Controller {
         //print_r($result);
 
         print_r(json_encode($this->get_case_data($result)));
+
     }
 
     /////////////////////////////////////////////////
@@ -446,6 +487,7 @@ class Illness extends My_Controller {
         $result = $this->M_casedetails->get_a_casedetails($id);
 
         print_r(json_encode($this->get_case_data($result)));
+
     }
 
 }

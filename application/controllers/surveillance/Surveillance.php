@@ -10,17 +10,21 @@ class Surveillance extends My_Controller {
     function __construct() {
 
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        } else {
-
-            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        } else {
+//
+//            $this->use_acc = $this->auth_val($this->session->userdata($this->session->userdata('rol')));
+//        }
 
         $this->load->library('Form_validation');
         $this->load->helper('my_uri');
         $this->load->helper(array('form', 'url'));
         $this->load->model(array('M_surveillance', 'M_farms', 'M_tbltestnames', 'M_livestock', 'M_surveillancedetails'));
+
+        //new authentication method
+        $this->auth->route_access();
+
     }
 
     function index($action, $recn = NULL) {
@@ -32,6 +36,7 @@ class Surveillance extends My_Controller {
         $operation = array('action' => $action, 'recn' => $recn);
         $this->data_template['script'] = $this->load->view('pages/s_surveillance', $operation, TRUE);
         $this->render('pages/surveillance_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function Surveillance_list() {
@@ -46,7 +51,7 @@ class Surveillance extends My_Controller {
 
             $crud->set_theme('datatables');
             $crud->set_table('tblsurveillance');
-            $crud->set_subject('Surveillance Data');
+            $crud->set_subject('Surveillance');
             $crud->unset_clone();
             $crud->unset_edit();
             $crud->unset_read();
@@ -63,7 +68,7 @@ class Surveillance extends My_Controller {
             $crud->add_action('View', '', '', 'ui-icon-document', array($this, 'crud_view_action'));
             $crud->add_action('Edit', '', '', 'ui-icon-pencil', array($this, 'crud_edit_action'));
             $crud->callback_delete(array($this, 'delete_callback'))
-                    ->order_by('recn', 'desc');
+              ->order_by('recn', 'desc');
 
             $obj = $crud->render();
             $data['output'] = $obj->output;
@@ -73,27 +78,33 @@ class Surveillance extends My_Controller {
             $this->data_template['script'] = $this->load->view('pages/s_surveillance', array('action' => '', 'recn' => ''), TRUE);
 
             $this->render('pages/list_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             show_error($e->getMessage() . ' --- ' . $e->getTraceAsString());
         }
+
     }
 
     function crud_edit_action($primary_key, $row) {
         return site_url('surveillance/data/edit') . '/' . $primary_key;
+
     }
 
     function crud_view_action($primary_key, $row) {
         return site_url('surveillance/data/read') . '/' . $primary_key;
+
     }
 
     function delete_callback($primary_key) {
         $this->M_surveillancedetails->del_surveillancedetails_by($primary_key);
         return $this->M_surveillance->del_surveillance($primary_key);
+
     }
 
     function dateOfSurveillance_callback($value, $row) {
         $dt = new DateTime($value);
         return $dt->format('d/M/Y');
+
     }
 
     function create_new() {
@@ -107,24 +118,28 @@ class Surveillance extends My_Controller {
         if (!isset($farmRecn) || !isset($testRecn) || !isset($dateOfSurveillance)) {
             $estado = array("state" => "All data are required", 'success' => FALSE);
             print_r(json_encode($estado));
-        } else {
+        }
+        else {
 
             $id = false;
             if ($edit == 0) {
                 $id = $this->M_surveillance->set_surveillance(array('farmRecn' => $farmRecn, 'testRecn' => $testRecn, 'dateOfSurveillance' => $dateOfSurveillance));
-            } else {
+            }
+            else {
                 $id = $this->M_surveillance->update_surveillance(array('farmRecn' => $farmRecn, 'testRecn' => $testRecn, 'dateOfSurveillance' => $dateOfSurveillance, 'recn' => $recn));
             }
             $estado = array();
 
             if ($id > 0) {
                 $estado = array("state" => "Your data has been successfully stored into the database.", "id" => $id, 'success' => TRUE);
-            } else {
+            }
+            else {
                 $estado = array("state" => "The data you had insert may not be saved.", "id" => $id, 'success' => FALSE);
             }
 
             print_r(json_encode($estado));
         }
+
     }
 
     function farm() {
@@ -138,6 +153,7 @@ class Surveillance extends My_Controller {
         }
 
         print_r($html_f);
+
     }
 
     function tests() {
@@ -151,6 +167,7 @@ class Surveillance extends My_Controller {
         }
 
         print_r($html_v);
+
     }
 
     function animalByFarm() {
@@ -164,6 +181,7 @@ class Surveillance extends My_Controller {
         }
 
         print_r($html);
+
     }
 
     function surv_animal() {
@@ -175,24 +193,28 @@ class Surveillance extends My_Controller {
         $id = 0;
         if ($edit == 0) {
             $id = $this->M_surveillancedetails->set_surveillancedetails(array('livestockRecn' => $animal_farm, 'testResult' => $test_result, 'surveillanceRecn' => $recnsrv));
-        } else
+        }
+        else
             $id = $this->M_surveillancedetails->update_surveillancedetails(array('livestockRecn' => $animal_farm, 'testResult' => $test_result, 'surveillanceRecn' => $recnsrv, 'recn' => $recn));
 
         $estado = array();
 
         if ($id > 0) {
             $estado = array("state" => "Your data has been successfully stored into the database.", "status" => TRUE);
-        } else {
+        }
+        else {
             $estado = array("state" => "The data you had insert may not be saved.", "status" => FALSE);
         }
 
         print_r(json_encode($estado));
+
     }
 
     function liveanimalBySurveillance() {
         $recn = $this->input->post('recn');
         $animals = $this->M_surveillance->liveanimalBySurveillance($recn);
         print_r(json_encode($animals));
+
     }
 
     function delete_tradeliveanimaldetails() {
@@ -205,6 +227,7 @@ class Surveillance extends My_Controller {
             print_r(json_encode(array("state" => 'Your data has not been deleted from the database.')));
 
         return;
+
     }
 
     function edit_tradeliveanimaldetails() {
@@ -212,6 +235,7 @@ class Surveillance extends My_Controller {
         $res = $this->M_surveillancedetails->get_a_surveillance_edit($id);
 
         print_r(json_encode($res));
+
     }
 
     function forward() {
@@ -221,7 +245,8 @@ class Surveillance extends My_Controller {
 
         if ($page + 1 > count($all_surveillance) || $page <= 0) {
             $page = 1;
-        } else {
+        }
+        else {
             $page = $page + 1;
         }
 
@@ -234,6 +259,7 @@ class Surveillance extends My_Controller {
 
 
         print_r(json_encode($nomenclator));
+
     }
 
     function back() {
@@ -244,7 +270,8 @@ class Surveillance extends My_Controller {
         if ($page - 1 <= 0 || $page > count($all_surveillance)) {
 
             $page = count($all_surveillance);
-        } else {
+        }
+        else {
             $page = $page - 1;
         }
 
@@ -256,6 +283,7 @@ class Surveillance extends My_Controller {
 
 
         print_r(json_encode($nomenclator));
+
     }
 
     function get_surv_data($srvSelect) {
@@ -264,6 +292,7 @@ class Surveillance extends My_Controller {
         $result = array('surveillance' => $srvSelect, 'animals' => $animals);
 
         return $result;
+
     }
 
     function delete() {
@@ -272,9 +301,11 @@ class Surveillance extends My_Controller {
 
         if ($delete > 0) {
             print_r(json_encode(array("status" => TRUE, "state" => 'Your data has been successfully deleted from the database.')));
-        } else {
+        }
+        else {
             print_r(json_encode(array("status" => FALSE, "state" => 'Your data has not been deleted from the database.')));
         }
+
     }
 
     function search() {
@@ -284,6 +315,7 @@ class Surveillance extends My_Controller {
         $srvSelect = $this->M_surveillance->find_surveillance($data);
         $nomenclator = $this->get_surv_data($srvSelect);
         print_r(json_encode($nomenclator));
+
     }
 
     function surv_get_by_id() {
@@ -292,6 +324,7 @@ class Surveillance extends My_Controller {
         $srvSelect = $this->M_surveillance->get_a_surveillance($recn);
         $nomenclator = $this->get_surv_data($srvSelect);
         print_r(json_encode($nomenclator));
+
     }
 
 }

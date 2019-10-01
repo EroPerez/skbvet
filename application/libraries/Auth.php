@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Author: Firoz Ahmad Likhon <likh.deshi@gmail.com>
  * Website: https://github.com/firoz-ahmad-likhon
@@ -15,19 +16,18 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Auth
-{
+class Auth {
     /*
-    |--------------------------------------------------------------------------
-    | Auth Library
-    |--------------------------------------------------------------------------
-    |
-    | This Library handles authenticating acl_users for the application and
-    | redirecting them to your home screen.
-    |
-    */
-    protected $CI;
+      |--------------------------------------------------------------------------
+      | Auth Library
+      |--------------------------------------------------------------------------
+      |
+      | This Library handles authenticating acl_users for the application and
+      | redirecting them to your home screen.
+      |
+     */
 
+    protected $CI;
     public $user = null;
     public $userID = null;
     public $userName = null;
@@ -37,18 +37,17 @@ class Auth
     public $loginStatus = false;
     public $error = array();
 
-    public function __construct()
-    {
-        $this->CI =& get_instance();
+    public function __construct() {
+        $this->CI = & get_instance();
 
         $this->init();
+
     }
 
     /**
      * Initialization the Auth class
      */
-    protected function init()
-    {
+    protected function init() {
         if ($this->CI->session->has_userdata("userID") && $this->CI->session->loginStatus) {
             $this->userID = $this->CI->session->userID;
             $this->userName = $this->CI->session->userName;
@@ -57,6 +56,7 @@ class Auth
         }
 
         return;
+
     }
 
     /**
@@ -65,9 +65,9 @@ class Auth
      * @param array $data
      * @return mixed
      */
-    public function showLoginForm($data = array())
-    {
+    public function showLoginForm($data = array()) {
         return $this->CI->load->view("auth/login", $data);
+
     }
 
     /**
@@ -76,18 +76,19 @@ class Auth
      * @param $request
      * @return array|bool|void
      */
-    public function login($request)
-    {
+    public function login($request) {
         if ($this->validate($request)) {
             $this->user = $this->credentials($this->userName, $this->password);
             if ($this->user) {
                 return $this->setUser();
-            } else {
+            }
+            else {
                 return $this->failedLogin($request);
             }
         }
 
         return false;
+
     }
 
     /**
@@ -96,20 +97,20 @@ class Auth
      * @param $request
      * @return bool
      */
-    protected function validate($request)
-    {
+    protected function validate($request) {
         $this->CI->form_validation->set_rules('username', 'User Name', 'required');
         $this->CI->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->CI->form_validation->run() == TRUE) {
-            /*$this->userName = $request["username"];
-            $this->password = $request["password"];*/
+            /* $this->userName = $request["username"];
+              $this->password = $request["password"]; */
             $this->userName = $this->CI->input->post("username", TRUE);
             $this->password = $this->CI->input->post("password", TRUE);
             return true;
         }
 
         return false;
+
     }
 
     /**
@@ -119,31 +120,32 @@ class Auth
      * @param $password
      * @return mixed
      */
-    protected function credentials($username, $password)
-    {
+    protected function credentials($username, $password) {
         $user = $this->CI->db->get_where("acl_users", array("username" => $username, "status" => 1, "deleted_at" => null))->row(0);
-        if($user && password_verify($password, $user->password)) {
+        if ($user && password_verify($password, $user->password)) {
             return $user;
         }
 
         return false;
+
     }
 
     /**
      * Setting session for authenticated user
      */
-    protected function setUser()
-    {
+    protected function setUser() {
         $this->userID = $this->user->id;
 
         $this->CI->session->set_userdata(array(
-            "userID" => $this->user->id,
-            "username" => $this->user->username,
-            "roles" => $this->userWiseRoles(),
-            "loginStatus" => true
+          "userID" => $this->user->id,
+          "username" => $this->user->username,
+          "roles" => $this->userWiseRoles(),
+          "loginStatus" => true,
+          "name" => $this->user->name,
         ));
 
-        return  redirect(site_url('pages/dashboard'));
+        return redirect('dashboard');
+
     }
 
     /**
@@ -152,11 +154,11 @@ class Auth
      * @param $request
      * @return array
      */
-    protected function failedLogin($request)
-    {
-        $this->error["failed"] = "Username or Password Incorrect.";
+    protected function failedLogin($request) {
+        $this->error["failed"] = "Credentials invalids.";
 
         return $this->error;
+
     }
 
     /**
@@ -164,9 +166,9 @@ class Auth
      *
      * @return bool
      */
-    public function loginStatus()
-    {
+    public function loginStatus() {
         return $this->loginStatus;
+
     }
 
     /**
@@ -174,13 +176,13 @@ class Auth
      *
      * @return bool
      */
-    public function authenticate()
-    {
+    public function authenticate() {
         if (!$this->loginStatus()) {
-            return redirect('login');
+            return redirect('auth/login');
         }
 
         return true;
+
     }
 
     /**
@@ -188,8 +190,7 @@ class Auth
      *
      * @return bool
      */
-    public function check($methods = 0)
-    {
+    public function check($methods = 0) {
         if (is_array($methods) && count(is_array($methods))) {
             foreach ($methods as $method) {
                 if ($method == (is_null($this->CI->uri->segment(2)) ? "index" : $this->CI->uri->segment(2))) {
@@ -198,6 +199,7 @@ class Auth
             }
         }
         return $this->authenticate();
+
     }
 
     /**
@@ -205,9 +207,9 @@ class Auth
      *
      * @return bool
      */
-    public function guest()
-    {
+    public function guest() {
         return !$this->loginStatus();
+
     }
 
     /**
@@ -215,9 +217,9 @@ class Auth
      *
      * @return int
      */
-    public function userID()
-    {
+    public function userID() {
         return $this->userID;
+
     }
 
     /**
@@ -225,9 +227,9 @@ class Auth
      *
      * @return string
      */
-    public function userName()
-    {
+    public function userName() {
         return $this->userName;
+
     }
 
     /**
@@ -235,9 +237,9 @@ class Auth
      *
      * @return array
      */
-    public function roles()
-    {
+    public function roles() {
         return $this->roles;
+
     }
 
     /**
@@ -245,9 +247,9 @@ class Auth
      *
      * @return array
      */
-    public function permissions()
-    {
+    public function permissions() {
         return $this->permissions;
+
     }
 
     /**
@@ -256,11 +258,11 @@ class Auth
      * @param $userID
      * @return string
      */
-    protected function userWiseRoles()
-    {
+    protected function userWiseRoles() {
         return array_map(function ($item) {
             return $item["role_id"];
         }, $this->CI->db->get_where("roles_acl_users", array("user_id" => $this->userID()))->result_array());
+
     }
 
     /**
@@ -268,16 +270,16 @@ class Auth
      *
      * @return array
      */
-    public function userRoles()
-    {
+    public function userRoles() {
         return array_map(function ($item) {
             return $item["name"];
         }, $this->CI->db
             ->select("roles.*")
             ->from("roles")
             ->join("roles_acl_users", "roles.id = roles_acl_users.role_id", "inner")
-            ->where(array("roles_users.user_id" => $this->userID(),"roles.status" => 1, "deleted_at" => null))
+            ->where(array("roles_users.user_id" => $this->userID(), "roles.status" => 1, "deleted_at" => null))
             ->get()->result_array());
+
     }
 
     /**
@@ -285,18 +287,18 @@ class Auth
      *
      * @return mixed
      */
-    public function userPermissions()
-    {
+    public function userPermissions() {
         return array_map(function ($item) {
             return $item["name"];
         }, $this->CI->db
-        ->select("permissions.*")
-        ->from("permissions")
-        ->join("permission_roles", "permissions.id = permission_roles.permission_id", "inner")
-        ->where_in("permission_roles.role_id", $this->roles())
-        ->where(array("permissions.status" => 1, "deleted_at" => null))
-        ->group_by("permission_roles.permission_id")
-        ->get()->result_array());
+            ->select("permissions.*")
+            ->from("permissions")
+            ->join("permission_roles", "permissions.id = permission_roles.permission_id", "inner")
+            ->where_in("permission_roles.role_id", $this->roles())
+            ->where(array("permissions.status" => 1, "deleted_at" => null))
+            ->group_by("permission_roles.permission_id")
+            ->get()->result_array());
+
     }
 
     /**
@@ -305,8 +307,7 @@ class Auth
      * @param array $methods
      * @return bool
      */
-    public function only($methods = array())
-    {
+    public function only($methods = array()) {
         if (is_array($methods) && count(is_array($methods))) {
             foreach ($methods as $method) {
                 if ($method == (is_null($this->CI->uri->segment(2)) ? "index" : $this->CI->uri->segment(2))) {
@@ -316,6 +317,7 @@ class Auth
         }
 
         return true;
+
     }
 
     /**
@@ -324,8 +326,7 @@ class Auth
      * @param array $methods
      * @return bool
      */
-    public function except($methods = array())
-    {
+    public function except($methods = array()) {
         if (is_array($methods) && count(is_array($methods))) {
             foreach ($methods as $method) {
                 if ($method == (is_null($this->CI->uri->segment(2)) ? "index" : $this->CI->uri->segment(2))) {
@@ -335,6 +336,7 @@ class Auth
         }
 
         return $this->route_access();
+
     }
 
     /**
@@ -342,19 +344,22 @@ class Auth
      *
      * @return bool|void
      */
-    public function route_access()
-    {
+    public function route_access() {
         $this->check();
 
         $routeName = (is_null($this->CI->uri->segment(2)) ? "index" : $this->CI->uri->segment(2)) . "-" . $this->CI->uri->segment(1);
-
-        if ($this->CI->uri->segment(1) == 'home')
+        
+//        var_dump($routeName);
+        
+        if ($this->CI->uri->segment(1) == 'dashboard')
             return true;
 
-        if($this->can($routeName))
+        if ($this->can($routeName))
             return true;
 
-        return redirect('exceptions/custom_404', 'refresh');
+        return redirect('auth/login', 'refresh');
+//        show_error('ACCESS FORBIDDEN!!!', 403);
+
     }
 
     /**
@@ -364,8 +369,7 @@ class Auth
      * @param bool $requireAll
      * @return bool
      */
-    public function hasRole($roles, $requireAll = false)
-    {
+    public function hasRole($roles, $requireAll = false) {
         if (is_array($roles)) {
             foreach ($roles as $role) {
                 if ($this->checkRole($role) && !$requireAll)
@@ -382,6 +386,7 @@ class Auth
         // If we've made it this far and $requireAll is TRUE, then ALL of the perms were found.
         // Return the value of $requireAll;
         return $requireAll;
+
     }
 
     /**
@@ -390,9 +395,9 @@ class Auth
      * @param $role
      * @return bool
      */
-    public function checkRole($role)
-    {
+    public function checkRole($role) {
         return in_array($role, $this->userRoles());
+
     }
 
     /**
@@ -402,8 +407,7 @@ class Auth
      * @param bool $requireAll
      * @return bool
      */
-    public function can($permissions, $requireAll = false)
-    {
+    public function can($permissions, $requireAll = false) {
         if (is_array($permissions)) {
             foreach ($permissions as $permission) {
                 if ($this->checkPermission($permission) && !$requireAll)
@@ -420,6 +424,7 @@ class Auth
         // If we've made it this far and $requireAll is TRUE, then ALL of the perms were found.
         // Return the value of $requireAll;
         return $requireAll;
+
     }
 
     /**
@@ -428,9 +433,9 @@ class Auth
      * @param $permission
      * @return bool
      */
-    public function checkPermission($permission)
-    {
+    public function checkPermission($permission) {
         return in_array($permission, $this->userPermissions());
+
     }
 
     /**
@@ -438,9 +443,8 @@ class Auth
      *
      * @return bool
      */
-    public function logout()
-    {
-        $this->CI->session->unset_userdata(array("userID", "username", "loginStatus"));
+    public function logout() {
+        $this->CI->session->unset_userdata(array("userID", "username", "loginStatus", "name"));
         $this->CI->session->sess_destroy();
 
         return true;

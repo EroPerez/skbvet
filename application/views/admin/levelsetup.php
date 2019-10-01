@@ -11,18 +11,20 @@
                         <div class="row">
                             <div class="col-md-12">
 
-                                <div class="section-divider"><span>SETTING</span></div>
+                                <div class="section-divider"><span>PERMISSIONS</span></div>
                                 <div class="panel">
                                     <div class="panel-body p25 pb10">
                                         <form role="form" class="form-horizontal">
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Roles</label>
+                                                <label class="col-md-3 control-label text-darken"><b>Roles: </b></label>
                                                 <div class="col-md-8">
 
-                                                    <?php foreach ($role as $key => $value) { ?>
+                                                    <?php foreach ($role as $key => $obj) {
+                                                        $value = (array)$obj;
+                                                        ?>
                                                         <label class="radio-inline mr10">
-                                                            <input id="<?php echo $value['rolename'] ?>" name="inlineRadioOptions" value="<?php echo $value['idlevels'] ?>" type="radio">
-                                                            <?php echo $value['idlevels'] ?>
+                                                            <input id="<?php echo $value['id'] ?>" name="roles" value="<?php echo $value['id'] ?>" type="radio">
+                                                            <?php echo $value['display_name'] ?>
                                                         </label>
 
                                                     <?php } ?>
@@ -52,10 +54,12 @@
     <div class="panel-heading">
         <ul class="nav panel-tabs-border panel-tabs panel-tabs-left">
             <li class="active"><a href="#tab2_1" data-toggle="tab">Farm and Farmers</a></li>
-            <li><a href="#tab2_2" data-toggle="tab">Case management</a></li>
+            <li><a href="#tab2_2" data-toggle="tab">Case management</a></li> 
             <li><a href="#tab2_3" data-toggle="tab">Abbatoir</a></li>
             <li><a href="#tab2_4" data-toggle="tab">Licences</a></li>
             <li><a href="#tab2_5" data-toggle="tab">Maintenance</a></li>
+            <li><a href="#tab2_6" data-toggle="tab">Specimen</a></li>
+            <li><a href="#tab2_7" data-toggle="tab">Surveillance</a></li>
         </ul>
     </div>
     <div class="panel-body">
@@ -122,8 +126,8 @@
                             <div class="col-md-4">
                                 <select id="multiselect5" multiple="multiple">
                                     <option value="cheese">Cases</option>
-                                    <option value="tomatoes">Treatments</option>
-                                    <option value="mozarella">Bills</option>
+<!--                                    <option value="tomatoes">Treatments</option>
+                                    <option value="mozarella">Bills</option>-->
 
                                 </select>
                             </div>
@@ -184,7 +188,7 @@
                             <div class="col-md-4">
                                 <select id="multiselect9" multiple="multiple">
                                     <option value="1">Commodity licences</option>
-                                    <option value="2">Livestoc licences</option>
+                                    <option value="2">Livestock licences</option>
 
                                 </select>
                             </div>
@@ -226,9 +230,9 @@
                             <label for="multiselect12" class="col-md-4 control-label">Allow user to</label>
                             <div class="col-md-4">
                                 <select id="multiselect12" multiple="multiple">
-                                    <option value="1">Add user</option>
-                                    <option value="2">Delete user</option>
-                                    <option value="3">Setup passwords</option>
+                                    <option value="1">Manage users</option>
+                                    <option value="2">Grant permissions</option>
+                                    <!--<option value="3">Setup passwords</option>-->
 
                                 </select>
                             </div>

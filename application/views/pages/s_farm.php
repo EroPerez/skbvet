@@ -578,7 +578,7 @@ if (isset($action) && $action === 'new') {
             }
         });
         newlivestock = false;
-        $('#body_illness').html('<tr><td>Click in Show Illness button</td></tr>');
+        $('#body_illness').html('<tr><td>Click in <b>Show Illness</b> button</td></tr>');
         listar_livestock_transf();
         //$('#livestock_Modal').modal(show);
 

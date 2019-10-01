@@ -20,7 +20,7 @@
                                 <li class=""><a aria-expanded="false" href="#tab_units" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Units</a></li>
                                 <li class=""><a aria-expanded="false" href="#tab_vets" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Vets</a></li>
                                 <li class=""><a aria-expanded="false" href="#tab_districts" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Districts</a></li>
-                                <li class=""><a aria-expanded="false" href="#tab_owners" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Owners</a></li>
+                                <!--<li class=""><a aria-expanded="false" href="#tab_owners" data-toggle="tab"><i class="fa fa-bolt text-purple"></i> Owners</a></li>-->
                             </ul>
                             <div class="tab-content admin-form">
                                 <div id="tab_como" class="tab-pane active">

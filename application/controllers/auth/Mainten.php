@@ -8,9 +8,9 @@ class Mainten extends My_Controller {
 
     function __construct() {
         parent::__construct();
-        if (!$this->session->userdata('autenticado')) {
-            redirect(site_url('Init'));
-        }
+//        if (!$this->session->userdata('autenticado')) {
+//            redirect(site_url('Init'));
+//        }
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
         $this->load->library('Form_builder');
@@ -21,6 +21,10 @@ class Mainten extends My_Controller {
         $this->load->database();
         $this->load->helper('language');
         $this->load->library('upload');
+
+        //new authentication method
+//        $this->auth->route_access();
+
     }
 
     function users() {
@@ -31,6 +35,7 @@ class Mainten extends My_Controller {
         $data['role'] = $this->M_levels->get_all_levels();
         $this->data_template['script'] = $this->load->view('admin/s_users', NULL, TRUE);
         $this->render('admin/l_users', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function levelsetup() {
@@ -41,6 +46,7 @@ class Mainten extends My_Controller {
         $data['role'] = $this->M_levels->get_all_levels();
         $this->data_template['script'] = $this->load->view('admin/s_users', NULL, TRUE);
         $this->render('admin/levelsetup', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+
     }
 
     function userslist() {
@@ -51,6 +57,7 @@ class Mainten extends My_Controller {
         }
 
         print_r(json_encode($user));
+
     }
 
     function edit_user() {
@@ -64,12 +71,14 @@ class Mainten extends My_Controller {
             $user['d_password'] = md5($user_pass);
             $this->M_user->update_users($user);
             $noty = 'Your password has been successfully stored into the database.';
-        } else {
+        }
+        else {
             $this->M_user->update_users_sin($user);
             $noty = 'The status or role have been changed.';
         }
 
         print_r(json_encode($noty));
+
     }
 
     function delete_user() {
@@ -77,8 +86,10 @@ class Mainten extends My_Controller {
         if (count($this->M_user->get_all_users()) > 1) {
             $this->M_user->del_users($id);
             print_r(json_encode('The user ' . $id . ' has been successfully deleted from the database.'));
-        } else
+        }
+        else
             print_r(json_encode('The user ' . $id . ' is the only user.'));
+
     }
 
     function add_user() {
@@ -92,9 +103,11 @@ class Mainten extends My_Controller {
             $user['d_password'] = md5($this->input->post('passwd'));
             $this->M_user->set_users($user);
             print_r(json_encode($user['d_username'] . ' has been added.'));
-        } else {
+        }
+        else {
             print_r(json_encode('retry the password.'));
         }
+
     }
 
     function do_uploads() {
@@ -114,11 +127,13 @@ class Mainten extends My_Controller {
 
 
             //   $this->load->view('upload_form', $error);
-        } else {
+        }
+        else {
             $data = array('upload_data' => $this->upload->data());
 
             print_r(json_encode($data));
         }
+
     }
 
 }

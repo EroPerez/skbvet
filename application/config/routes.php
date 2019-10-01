@@ -62,11 +62,35 @@ $route['default_controller'] = 'Init';
 $route['auth/login'] = 'Init';
 $route['auth/logout'] = 'Init/logout';
 
-////////////SETUP USERS////////////////////
+////////SETUP USERS////////
+$route['users'] = 'Users/setup';
+$route['users/list'] = 'Users/setup/list';
+$route['users/ajax_list'] = 'Users/setup/ajax_list';
+$route['users/ajax_list_info'] = 'Users/setup/ajax_list_info';
+$route['users/insert_validation'] = 'Users/setup/insert_validation';
+$route['users/insert'] = 'Users/setup/insert';
+$route['users/update_validation/(:any)'] = 'Users/setup/update_validation/$1';
+$route['users/export'] = 'Users/setup/export';
+$route['users/ajax_relation_n_n'] = 'Users/setup/ajax_relation_n_n';
+$route['users/(:any)/(:any)'] = 'Users/setup/$1/$2';
+
+////////ADMIN PERMISSIONS////////
+$route['permissions'] = 'Permissions/setup';
+$route['permissions/list'] = 'Permissions/setup/list';
+$route['permissions/ajax_list'] = 'Permissions/setup/ajax_list';
+$route['permissions/ajax_list_info'] = 'Permissions/setup/ajax_list_info';
+$route['permissions/insert_validation'] = 'Permissions/setup/insert_validation';
+$route['permissions/insert'] = 'Permissions/setup/insert';
+$route['permissions/update_validation/(:any)'] = 'Permissions/setup/update_validation/$1';
+$route['permissions/export'] = 'Permissions/setup/export';
+$route['permissions/ajax_relation_n_n'] = 'Permissions/setup/ajax_relation_n_n';
+$route['permissions/(:any)/(:any)'] = 'Permissions/setup/$1/$2';
+
+////////////NAVIGATIONS////////////////////
 $route['pages/(:any)'] = 'Init/pages/$1';
 
 ////////SETUP////////
-$route['setup/users'] = 'admin/Access';
+//$route['setup/users'] = 'admin/Access';
 $route['setup'] = 'setup/Setup/index';
 
 ////////FARM////////

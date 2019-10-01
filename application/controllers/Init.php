@@ -18,8 +18,7 @@ class Init extends My_Controller {
 
 //        $this->load->database();
 //        $this->load->model(array('M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers'));
-         $this->load->model(array('M_tbldistricts'));
-        $header['first'] = 'Usuarios';
+        $header['first'] = 'Users';
         $header['page_title'] = 'Animalhealthrecords';
         $this->header_view = $this->load->view('templates/header', $header, TRUE);
         $this->footer_view = $this->load->view('templates/footer', '', TRUE);
@@ -52,7 +51,7 @@ class Init extends My_Controller {
      */
     public function logout() {
         if ($this->auth->logout())
-            return redirect('login');
+            return redirect('auth/login');
 
         return false;
 
@@ -110,14 +109,8 @@ class Init extends My_Controller {
 
                 redirect('surveillance');
                 break;
-            case 'any':
-
-                redirect('any');
-                break;
             default:
-                $data['parish'] = $this->M_tbldistricts->get_all_Districts();
-                $data['crum'] = '';
-                $this->render('pages/any_view', 'template_any', $this->data_template, $this->header_view, $data, $this->footer_view);
+                show_404();
                 break;
         }
 

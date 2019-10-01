@@ -10,40 +10,40 @@ class My_Controller extends CI_Controller {
     protected $login_in = FALSE;
     protected $result_f_access = array();
     protected $accesos = array(
-        'allow_intro_edit' => array(
-            'farm_farmers' => '0',
-            'livestock' => '0',
-            'transfer' => '0',
-            'case' => '0',
-            'treatment' => '0',
-            'bills' => '0',
-            'presenters' => '0',
-            'comm_licence' => '0',
-            'livestock_licence' => '0'
-        ),
-        'allow_user_setup' => array(
-            'species' => '0',
-            'breeds' => '0',
-            'districts' => '0',
-            'veterinarian' => '0',
-            'illness' => '0',
-            'treatments' => '0',
-            'commodities' => '0',
-            'contries' => '0',
-            'traders' => '0',
-            'owners' => '0'
-        ),
-        'allow_user_view' => array(
-            'all_farm_lives_rep' => '0',
-            'all_case_rep' => '0',
-            'all_abbatair_reports' => '0',
-            'all_licence_reports' => '0'
-        ),
-        'maintenance' => array(
-            'add_user' => '0',
-            'delete_user' => '0',
-            'setup_passwd' => '0'
-        )
+      'allow_intro_edit' => array(
+        'farm_farmers' => '0',
+        'livestock' => '0',
+        'transfer' => '0',
+        'case' => '0',
+        'treatment' => '0',
+        'bills' => '0',
+        'presenters' => '0',
+        'comm_licence' => '0',
+        'livestock_licence' => '0'
+      ),
+      'allow_user_setup' => array(
+        'species' => '0',
+        'breeds' => '0',
+        'districts' => '0',
+        'veterinarian' => '0',
+        'illness' => '0',
+        'treatments' => '0',
+        'commodities' => '0',
+        'contries' => '0',
+        'traders' => '0',
+        'owners' => '0'
+      ),
+      'allow_user_view' => array(
+        'all_farm_lives_rep' => '0',
+        'all_case_rep' => '0',
+        'all_abbatair_reports' => '0',
+        'all_licence_reports' => '0'
+      ),
+      'maintenance' => array(
+        'add_user' => '0',
+        'delete_user' => '0',
+        'setup_passwd' => '0'
+      )
     );
 
     function __construct() {
@@ -51,8 +51,8 @@ class My_Controller extends CI_Controller {
         $this->load->library('Session');
         $this->data_template['page_title'] = 'AnimalHealthRecords';
         $this->load->library('table');
-        $this->load->library('auth');
-        
+        $this->load->library(array('auth'));
+
         $this->load->database();
 //        $this->load->model(array('M_access'));
 
@@ -62,6 +62,7 @@ class My_Controller extends CI_Controller {
 
 
         ///$this->leer_access($access['configuration']);
+
     }
 
     protected function leer_access($accss) {
@@ -104,6 +105,7 @@ class My_Controller extends CI_Controller {
         $this->accesos['maintenance']['setup_passwd'] = $maintenance['2'];
 
         return $this->accesos;
+
     }
 
     /////////////////////////////////////////////
@@ -138,29 +140,37 @@ class My_Controller extends CI_Controller {
                 if ($rol_level == "1") {
 
                     return true;
-                } elseif ($rol_level == "2") {
+                }
+                elseif ($rol_level == "2") {
 
                     return true;
-                } elseif ($rol_level == "3") {
+                }
+                elseif ($rol_level == "3") {
 
                     return true;
-                } elseif ($rol_level == "4") {
+                }
+                elseif ($rol_level == "4") {
 
                     return true;
-                } elseif ($rol_level == "5") {
+                }
+                elseif ($rol_level == "5") {
 
                     return true;
-                } else {
+                }
+                else {
                     if ($rol_level == $rol) {
                         return true;
-                    } else {
+                    }
+                    else {
                         show_error('Acces Prohibido!!!', 403);
                     }
                 }
             }
-        } else {
+        }
+        else {
             return false;
         }
+
     }
 
     //END FUNCTION//
@@ -173,6 +183,7 @@ class Admin_Controller extends MY_Controller {
     ///CONSTRUCTOR//
     function __construct() {
         parent::__construct();
+
     }
 
     //END CONSTRUCTOR//
@@ -182,6 +193,7 @@ class Clientes_Controller extends MY_Controller {
 
     function __construct() {
         parent::__construct();
+
     }
 
 }
