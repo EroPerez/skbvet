@@ -191,10 +191,10 @@
                             <li class="list-group-item"><a href="#" class="animated animated-short fadeInUp"><span class="fa fa-user"></span> <?php echo $this->session->userdata('name'); ?></a></li>
 
                             <?php if (can(array('index-users'))) { ?>
-                                <li class="list-group-item"><a href="<?php echo site_url('users'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-gear"></span> Users</a></li>
+                                <li class="list-group-item"><a href="<?php echo site_url('pages/users'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-gear"></span> Users</a></li>
                             <?php } ?>
                             <?php if (can(array('index-permissions'))) { ?>
-                                <li class="list-group-item"><a href="<?php echo site_url('permissions'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-lock"></span> Permissions</a></li>
+                                <li class="list-group-item"><a href="<?php echo site_url('pages/permissions'); ?>" class="animated animated-short fadeInUp"><span class="fa fa-lock"></span> Permissions</a></li>
                             <?php } ?>
                             <li class="dropdown-footer"><a href="<?php echo site_url('auth/logout'); ?>"><span class="fa fa-power-off pr5"></span> Logout</a></li>
                         </ul>
@@ -324,11 +324,11 @@
                                 <ul class="nav sub-nav">
                                     <?php if (can(array('index-users'))) { ?>
                                         <li>
-                                            <a href="<?php echo site_url('users'); ?>"><span class="fa fa-user"></span>Users</a>
+                                            <a href="<?php echo site_url('pages/users'); ?>"><span class="fa fa-user"></span>Users</a>
                                         </li>
                                     <?php } if (can(array('index-permissions'))) { ?>
                                         <li>
-                                            <a href="<?php echo site_url('permissions'); ?>"><span class="fa fa-lock"></span>Permissions</a>
+                                            <a href="<?php echo site_url('pages/permissions'); ?>"><span class="fa fa-lock"></span>Permissions</a>
                                         </li>
                                     <?php } ?>
                                 </ul>

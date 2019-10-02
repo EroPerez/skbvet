@@ -51,7 +51,7 @@ class My_Controller extends CI_Controller {
         $this->load->library('Session');
         $this->data_template['page_title'] = 'AnimalHealthRecords';
         $this->load->library('table');
-        $this->load->library(array('auth'));
+        $this->load->library('Auth', array(), 'auth');
 
         $this->load->database();
 //        $this->load->model(array('M_access'));
@@ -127,6 +127,7 @@ class My_Controller extends CI_Controller {
         $this->data['the_view_content'] = (is_null($the_view)) ? '' : $this->load->view($the_view, $data_count, TRUE);
 
         $this->load->view('templates/' . $template . '_view', $this->data);
+
     }
 
     protected function auth_val($rol, $acl = '', $acc_name = '') {

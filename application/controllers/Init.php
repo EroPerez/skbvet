@@ -10,32 +10,22 @@ class Init extends My_Controller {
         parent::__construct();
 
         $this->load->library('Form_validation');
-        $this->load->helper(array('form', 'url'));
         $this->load->library('Form_builder');
         $this->load->library('System_message');
         $this->load->library('Email_client');
         $this->load->library('Session');
+        $this->load->database();
+        $this->load->library(array('auth', 'form_validation'));
 
-//        $this->load->database();
-//        $this->load->model(array('M_tbldistricts', 'M_tblspecies', 'M_tblbreeds', 'M_tblcountries', 'M_transfers'));
         $header['first'] = 'Users';
         $header['page_title'] = 'Animalhealthrecords';
         $this->header_view = $this->load->view('templates/header', $header, TRUE);
         $this->footer_view = $this->load->view('templates/footer', '', TRUE);
 
-//    if ($rol = $this->session->userdata('rol') !== NULL) {
-//      $access = $this->M_access->get_acceso_by_level($rol);
-//      foreach ($access as $key => $valor) {
-//        $this->access_level[$key] = $this->leer_access($valor['configuration']);
-//      }
-//      $this->session->set_userdata($this->access_level);
-//    }
-
     }
 
     // funcion de Incio.
     function index() {
-//    $this->load->view('auth/login', NULL, FALSE);
         $data = array();
 
         if ($_POST) {
@@ -108,6 +98,14 @@ class Init extends My_Controller {
             case 'surveillance':
 
                 redirect('surveillance');
+                break;
+            case 'permissions':
+
+                redirect('permissions');
+                break;
+            case 'users':
+
+                redirect('users');
                 break;
             default:
                 show_404();

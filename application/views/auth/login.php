@@ -46,7 +46,7 @@
                         </div>
                         <div class="panel panel-info mt10 br-n">
                            
-                            <form id="formlogin" method="post" action="<?php echo site_url('auth/login') ?>">
+                            <form id="formlogin" method="post" action="<?php echo site_url('Init') ?>">
                                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>"
                                        value="<?= $this->security->get_csrf_hash(); ?>">
                                 <div class="panel-body bg-light p30">

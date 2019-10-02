@@ -348,17 +348,16 @@ class Auth {
         $this->check();
 
         $routeName = (is_null($this->CI->uri->segment(2)) ? "index" : $this->CI->uri->segment(2)) . "-" . $this->CI->uri->segment(1);
-        
+
 //        var_dump($routeName);
-        
-        if ($this->CI->uri->segment(1) == 'dashboard')
+        //if ($this->CI->uri->segment(1) == 'dashboard')
+        if (strcasecmp($this->CI->uri->segment(1), 'dashboard') == 0)
             return true;
 
         if ($this->can($routeName))
             return true;
 
         return redirect('auth/login', 'refresh');
-//        show_error('ACCESS FORBIDDEN!!!', 403);
 
     }
 
@@ -448,5 +447,7 @@ class Auth {
         $this->CI->session->sess_destroy();
 
         return true;
+
     }
+
 }

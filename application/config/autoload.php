@@ -61,7 +61,7 @@ $autoload['packages'] = array(APPPATH . 'third_party/DevelBar');
   |	$autoload['libraries'] = array('user_agent' => 'ua');
  */
 
-$autoload['libraries'] = array('form_validation', 'grocery_CRUD', 'database', 'Session');
+$autoload['libraries'] = array('Ion_auth','form_validation','grocery_CRUD', 'database', 'session');
 
 
 /*
@@ -138,4 +138,4 @@ $autoload['language'] = array();
   |	$autoload['model'] = array('first_model' => 'first');
  */
 
-$autoload['model'] = array();
+$autoload['model'] = array('ion_auth_model');
