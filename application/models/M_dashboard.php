@@ -1,6 +1,6 @@
 <?php
 
-class M_Dashboard extends CI_Model {
+class M_dashboard extends CI_Model {
 
 /////////////////////////////////////////////////////////////////////////////////////     
 // M�todos de la clase M_Dashboard.

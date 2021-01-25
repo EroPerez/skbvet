@@ -18,8 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | environments.
   |
  */
-//$config['base_url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] ;
-$config['base_url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/ahr/';
+$config['base_url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] ;
+//$config['base_url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/ahr/';
 
 /*
   |--------------------------------------------------------------------------

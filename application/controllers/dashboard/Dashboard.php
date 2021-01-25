@@ -14,7 +14,7 @@ class Dashboard extends My_Controller {
         $this->load->helper('my_uri');
         $this->load->library('Form_validation');
         $this->load->helper(array('form', 'url'));
-        $this->load->model(array('M_Dashboard', 'M_tbldistricts'));
+        $this->load->model(array('M_dashboard', 'M_tbldistricts'));
 
 
         //new authentication method
@@ -27,7 +27,7 @@ class Dashboard extends My_Controller {
         $data['title'] = 'Dashboard';
         $data['accesos'] = $this->result_f_access;
         $data['parish'] = $this->M_tbldistricts->get_all_Districts();
-        $data['mapItems'] = $this->fillMapItems($this->M_Dashboard->getMapData());
+        $data['mapItems'] = $this->fillMapItems($this->M_dashboard->getMapData());
         $data['pag'] = 'Dashboard';
         $this->data_template['script'] = $this->load->view('pages/s_dashboard', NULL, TRUE);
 
@@ -368,37 +368,37 @@ class Dashboard extends My_Controller {
     }
 
     function animalByDistricts() {
-        echo json_encode($this->M_Dashboard->getAnimalByDistricts());
+        echo json_encode($this->M_dashboard->getAnimalByDistricts());
 
     }
 
     function caseByDistricts() {
-        echo json_encode($this->M_Dashboard->getCaseByDistricts());
+        echo json_encode($this->M_dashboard->getCaseByDistricts());
 
     }
 
     function farmByDistricts() {
-        echo json_encode($this->M_Dashboard->getFarmByDistricts());
+        echo json_encode($this->M_dashboard->getFarmByDistricts());
 
     }
 
     function totalAnimalTestedByFarm() {
-        echo json_encode($this->M_Dashboard->getTotalAnimalTestedByFarm());
+        echo json_encode($this->M_dashboard->getTotalAnimalTestedByFarm());
 
     }
 
     function numberOfAnimalImportedBySpecies() {
-        echo json_encode($this->M_Dashboard->getNumberOfAnimalImportedBySpecies());
+        echo json_encode($this->M_dashboard->getNumberOfAnimalImportedBySpecies());
 
     }
 
     function totaloMeatImportedByCommodity() {
-        echo json_encode($this->M_Dashboard->getTotaloMeatImportedByCommodity());
+        echo json_encode($this->M_dashboard->getTotaloMeatImportedByCommodity());
 
     }
 
     function numberSpecimenPermitIssuedByYear() {
-        echo json_encode($this->M_Dashboard->getNumberSpecimenPermitIssuedByYear());
+        echo json_encode($this->M_dashboard->getNumberSpecimenPermitIssuedByYear());
 
     }
 
